@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Olink DS team" />
+
+<meta name="date" content="2022-02-09" />
+
+<title>Olink® Analyze Vignette</title>
+
+<script src="data:application/javascript;base64,Ly8gUGFuZG9jIDIuOSBhZGRzIGF0dHJpYnV0ZXMgb24gYm90aCBoZWFkZXIgYW5kIGRpdi4gV2UgcmVtb3ZlIHRoZSBmb3JtZXIgKHRvCi8vIGJlIGNvbXBhdGlibGUgd2l0aCB0aGUgYmVoYXZpb3Igb2YgUGFuZG9jIDwgMi44KS4KZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcignRE9NQ29udGVudExvYWRlZCcsIGZ1bmN0aW9uKGUpIHsKICB2YXIgaHMgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKCJkaXYuc2VjdGlvbltjbGFzcyo9J2xldmVsJ10gPiA6Zmlyc3QtY2hpbGQiKTsKICB2YXIgaSwgaCwgYTsKICBmb3IgKGkgPSAwOyBpIDwgaHMubGVuZ3RoOyBpKyspIHsKICAgIGggPSBoc1tpXTsKICAgIGlmICghL15oWzEtNl0kL2kudGVzdChoLnRhZ05hbWUpKSBjb250aW51ZTsgIC8vIGl0IHNob3VsZCBiZSBhIGhlYWRlciBoMS1oNgogICAgYSA9IGguYXR0cmlidXRlczsKICAgIHdoaWxlIChhLmxlbmd0aCA+IDApIGgucmVtb3ZlQXR0cmlidXRlKGFbMF0ubmFtZSk7CiAgfQp9KTsK"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<link rel="stylesheet" href="data:text/css,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" type="text/css" />
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Olink® Analyze Vignette</h1>
+<h4 class="author">Olink DS team</h4>
+<h4 class="date">2022-02-09</h4>
+
+
+<div id="TOC">
+<ul>
+<li><a href="#installation">Installation</a></li>
+<li><a href="#list-of-functions">List of functions</a></li>
+<li><a href="#usage">Usage</a>
+<ul>
+<li><a href="#load-the-library">Load the library</a></li>
+<li><a href="#introduction-to-olink-npx-data-format">Introduction to Olink NPX data format</a></li>
+</ul></li>
+<li><a href="#preprocessing">Preprocessing</a>
+<ul>
+<li><a href="#read-npx-data-read_npx">Read NPX data (read_NPX)</a></li>
+<li><a href="#randomize-samples-on-plate-olink_plate_randomizer">Randomize samples on plate (olink_plate_randomizer)</a></li>
+<li><a href="#select-bridge-samples-olink_bridgeselector">Select bridge samples (olink_bridgeselector)</a></li>
+<li><a href="#normalizing-npx-data-olink_normalization">Normalizing NPX data (olink_normalization)</a></li>
+</ul></li>
+<li><a href="#statistical-analysis">Statistical analysis</a>
+<ul>
+<li><a href="#t-test-analysis-olink_ttest">T-test analysis (olink_ttest)</a></li>
+<li><a href="#analysis-for-variance-anova-olink_anova">Analysis for variance (ANOVA) (olink_anova)</a></li>
+<li><a href="#post-hoc-anova-analysis-olink_anova_posthoc">Post-hoc ANOVA analysis (olink_anova_posthoc)</a></li>
+<li><a href="#linear-mixed-effects-model-analysis-olink_lmer">Linear mixed effects model analysis (olink_lmer)</a></li>
+<li><a href="#post-hoc-linear-mixed-effects-model-analysis-olink_lmer_posthoc">Post-hoc linear mixed effects model analysis (olink_lmer_posthoc)</a></li>
+</ul></li>
+<li><a href="#visualization">Visualization</a>
+<ul>
+<li><a href="#boxplots-for-outcomes-olink_boxplot">Boxplots for outcomes (olink_boxplot)</a></li>
+<li><a href="#boxplots-for-qc-olink_dist_plot">Boxplots for QC (olink_dist_plot)</a></li>
+<li><a href="#point-range-plot-for-lmer-olink_lmer_plot">Point-range plot for LMER (olink_lmer_plot)</a></li>
+<li><a href="#principal-components-analysis-pca-plot-olink_pca_plot">Principal components analysis (PCA) plot (olink_pca_plot)</a></li>
+<li><a href="#scatterplot-for-qc-olink_qc_plot">Scatterplot for QC (olink_qc_plot)</a></li>
+<li><a href="#plot-results-of-t-test-olink_volcano_plot">Plot results of t-test (olink_volcano_plot)</a></li>
+<li><a href="#theming-function-set_plot_theme">Theming function (set_plot_theme)</a></li>
+<li><a href="#color-theming-olink_color_discrete-olink_color_gradient-olink_fill_discrete-olink_fill_gradient">Color theming (olink_color_discrete, olink_color_gradient, olink_fill_discrete, olink_fill_gradient)</a></li>
+</ul></li>
+</ul>
+</div>
+
+<p>Olink® Analyze is an R package that provides a versatile toolbox to enable fast and easy handling of Olink® NPX data for your proteomics research. Olink® Analyze provides functions for using Olink data, including functions for importing Olink® NPX datasets exported from the NPX Manager, as well as quality control (QC) plot functions and functions for various statistical tests. This package is meant to provide a convenient pipeline for your Olink NPX data analysis.</p>
+<div id="installation" class="section level1">
+<h1>Installation</h1>
+<p>The package <em>remotes</em> is required for the installation.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;remotes&quot;</span>)</span></code></pre></div>
+<p>Now you can proceed to installing Olink® Analyze from Github.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="at">repo =</span><span class="st">&#39;Olink-Proteomics/OlinkRPackage/OlinkAnalyze&#39;</span>, <span class="at">ref =</span> <span class="st">&quot;main&quot;</span>, <span class="at">build_vignettes =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+</div>
+<div id="list-of-functions" class="section level1">
+<h1>List of functions</h1>
+<p><strong>Preprocessing</strong></p>
+<ul>
+<li><em>read_NPX</em> Function to read NPX data into long format</li>
+<li><em>olink_plate_randomizer</em> Randomize samples on plate</li>
+<li><em>olink_bridgeselector</em> Select bridge samples</li>
+<li><em>olink_normalization</em> Normalization of all proteins (by OlinkID)</li>
+</ul>
+<p><strong>Statistical analysis</strong></p>
+<ul>
+<li><em>olink_ttest</em> Function which performs a t-test per protein</li>
+<li><em>olink_anova</em> Function which performs an ANOVA per protein</li>
+<li><em>olink_anova_posthoc</em> Function which performs an ANOVA post-hoc test per protein</li>
+<li><em>olink_lmer</em> Function which performs a linear mixed model per protein</li>
+<li><em>olink_lmer_posthoc</em> Function which performs a linear mixed model post-hoc per protein</li>
+</ul>
+<p><strong>Visualization</strong></p>
+<ul>
+<li><em>olink_boxplot</em> Function which plots boxplots of a selected variable</li>
+<li><em>olink_dist_plot</em> Function to plot the NPX distribution by panel</li>
+<li><em>olink_lmer_plot</em> Function which performs a point-range plot per protein on a linear mixed model</li>
+<li><em>olink_pca_plot</em> Function to plot a PCA of the data</li>
+<li><em>olink_qc_plot</em> Function to plot an overview of a sample cohort per Panel</li>
+<li><em>olink_volcano_plot</em> Easy volcano plot with Olink theme</li>
+<li><em>set_plot_theme</em> Function to set plot theme</li>
+</ul>
+<p><strong>Sample datasets</strong></p>
+<ul>
+<li><em>npx_data1</em> NPX Data in Long format</li>
+<li><em>npx_data2</em> NPX Data in Long format, Follow-up</li>
+<li><em>manifest</em> A sample manifest including Sample ID, Subject ID and clinical variables</li>
+</ul>
+</div>
+<div id="usage" class="section level1">
+<h1>Usage</h1>
+<div id="load-the-library" class="section level2">
+<h2>Load the library</h2>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load OlinkAnalyze</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(OlinkAnalyze)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Load other libraries used in Vignette</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr)</span></code></pre></div>
+</div>
+<div id="introduction-to-olink-npx-data-format" class="section level2">
+<h2>Introduction to Olink NPX data format</h2>
+<p>The package contains two test data files named npx_data1 and npx_data2. These are synthetic datasets that resemble Olink® data accompanied by clinical variables. Olink® data in that are delivered in long format or imported with the function <em>read_NPX</em> (that converts the data into a long format) contain the following columns:</p>
+<ul>
+<li><strong>SampleID</strong> <em>&lt;chr&gt;</em>: Sample names or IDs.</li>
+<li><strong>Index</strong> <em>&lt;int&gt;</em>: Unique number for each SampleID. It is used to make up for non unique sample IDs.</li>
+<li><strong>OlinkID</strong> <em>&lt;chr&gt;</em>: Unique ID for each assay assigned by Olink. In case the assay is included in more than one panels it will have a different OlinkID in each one.</li>
+<li><strong>UniProt</strong> <em>&lt;chr&gt;</em>: UniProt ID.</li>
+<li><strong>Assay</strong> <em>&lt;chr&gt;</em>: Common gene name for the assay.</li>
+<li><strong>MissingFreq</strong> <em>&lt;dbl&gt;</em>: Missing frequency for the OlinkID, i.e. frequency of samples with NPX value below limit of detection (LOD).</li>
+<li><strong>Panel</strong> <em>&lt;chr&gt;</em>: Olink Panel that samples ran on. Read more about Olink Panels here: <a href="https://www.olink.com/products-services/">https://www.olink.com/products-services/</a>.</li>
+<li><strong>Panel_Version</strong> <em>&lt;chr&gt;</em>: Version of the panel. A new panel version might include some different or improved assays.</li>
+<li><strong>PlateID</strong> <em>&lt;chr&gt;</em>: Name of the plate.</li>
+<li><strong>QC_Warning</strong> <em>&lt;chr&gt;</em>: Indication whether the sample passed Olink QC. Read more here: <a href="https://www.olink.com/faq/how-is-quality-control-of-the-data-performed/">https://www.olink.com/faq/how-is-quality-control-of-the-data-performed/</a>.</li>
+<li><strong>LOD</strong> <em>&lt;dbl&gt;</em>: Limit of detection (LOD) is the minimum level of an individual protein that can be measured. LOD is defined as 3 times the standard deviation over background.</li>
+<li><strong>NPX</strong> <em>&lt;dbl&gt;</em>: Normalized Protein eXpression, is Olink®’s unit of protein expression level in a log<sub>2</sub> scale. The majority of the functions of this package use NPX values for calculations. Read more about NPX here: <a href="https://www.olink.com/faq/what-is-npx/">https://www.olink.com/faq/what-is-npx/</a>.</li>
+</ul>
+<p><strong>Note:</strong> There are 5 additional variables in the sample datasets npx_data1 and npx_data2 that include clinical or other information, namely: Subject <em>&lt;chr&gt;</em>, Treatment <em>&lt;chr&gt;</em>, Site <em>&lt;chr&gt;</em>, Time <em>&lt;chr&gt;</em>, Project <em>&lt;chr&gt;</em>.</p>
+</div>
+</div>
+<div id="preprocessing" class="section level1">
+<h1>Preprocessing</h1>
+<div id="read-npx-data-read_npx" class="section level2">
+<h2>Read NPX data (read_NPX)</h2>
+<p>The read_NPX function imports an NPX file of wide format that has been exported from Olink® NPX Manager and converts the data into the (preferred by R) long format. The wide format is the most common way Olink® delivers data for Olink® Target 96, however, for data analysis a long format is preferred. No prior alterations to the output of the NPX Manager should be made for this function to work as expected.</p>
+<div id="function-arguments" class="section level3">
+<h3>Function arguments</h3>
+<ul>
+<li>filename: Path to the NPX Manager output file.</li>
+</ul>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read_NPX</span>(<span class="st">&quot;~/NPX_file_location.xlsx&quot;</span>)</span></code></pre></div>
+</div>
+<div id="function-output" class="section level3">
+<h3>Function output</h3>
+<p>A tibble in long format containing:</p>
+<ul>
+<li>SampleID: Sample names or IDs.</li>
+<li>Index: Unique number for each SampleID. It is used to make up for non unique sample IDs.</li>
+<li>OlinkID: Unique ID for each assay assigned by Olink. In case the assay is included in more than one panels it will have a different OlinkID in each one.</li>
+<li>UniProt: UniProt ID.</li>
+<li>Assay: Common gene name for the assay.</li>
+<li>MissingFreq: Missing frequency for the OlinkID, i.e. frequency of samples with NPX value below limit of detection (LOD).</li>
+<li>Panel: Olink Panel that samples ran on. Read more about Olink Panels here: <a href="https://www.olink.com/products-services/">https://www.olink.com/products-services/</a>.</li>
+<li>Panel_Version: Version of the panel. A new panel version might include some different or improved assays.</li>
+<li>PlateID: Name of the plate.</li>
+<li>QC_Warning: Indication whether the sample passed Olink QC. Read more here: <a href="https://www.olink.com/faq/how-is-quality-control-of-the-data-performed/">https://www.olink.com/faq/how-is-quality-control-of-the-data-performed/</a>.<br />
+</li>
+<li>LOD: Limit of detection (LOD) is the minimum level of an individual protein that can be measured. LOD is defined as 3 times the standard deviation over background.</li>
+<li>NPX: Normalized Protein eXpression, is Olink’s unit of protein expression level in a log<sub>2</sub> scale. The majority of the functions of this package use NPX values for calculations. Read more about NPX here: <a href="https://www.olink.com/faq/what-is-npx/">https://www.olink.com/faq/what-is-npx/</a>.</li>
+</ul>
+</div>
+</div>
+<div id="randomize-samples-on-plate-olink_plate_randomizer" class="section level2">
+<h2>Randomize samples on plate (olink_plate_randomizer)</h2>
+<p>The olink_plate_randomizer function randomly assigns samples to a plate well with the option to keep the same individuals on the same plate. Olink® does not recommend to force balance based on other clinical variables.</p>
+<div id="function-arguments-1" class="section level3">
+<h3>Function arguments</h3>
+<ul>
+<li>Manifest: tibble/data frame in long format containing all sample ID’s. Sample ID column should be named SampleID.</li>
+<li>PlateSize: Integer, either 96 or 48. 96 is default and should be used for Olink® Target 96 and Olink® Explore projects. For Olink® Target 48 projects, use 48.</li>
+<li>SubjectColumn: (Optional) Column name of the subject ID column. Cannot contain missing values. If provided, subjects are kept on the same plate.</li>
+<li>iterations: Number of iterations for fitting subjects on the same plate.</li>
+<li>available.spots: (Optional) Integer. Number of wells available on each plate. Maximum 40 for Olink® Target 48 and 88 for Olink® Target 96/Explore. Can also take a vector equal to the number of plates to be used indicating the number of wells available on each plate.</li>
+<li>seed: Seed to set. Highly recommend setting it for reproducibility.</li>
+</ul>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">olink_plate_randomizer</span>(manifest, </span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">SubjectColumn =</span><span class="st">&quot;SampleID&quot;</span>,</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">seed=</span><span class="dv">111</span>)</span></code></pre></div>
+</div>
+<div id="function-output-1" class="section level3">
+<h3>Function output</h3>
+<p>A tibble including SampleID, SubjectID etc. assigned to well positions.</p>
+</div>
+</div>
+<div id="select-bridge-samples-olink_bridgeselector" class="section level2">
+<h2>Select bridge samples (olink_bridgeselector)</h2>
+<p>The bridge selection function selects a number of bridge samples based on the input data. Bridge samples are used to normalize two dataframes/projects that have been ran at different time points, hence, a batch effect is expected. It select samples that fulfill certain criteria that include good detectability, passing quality control and covering a wide range of data points. When possible the function recommends 8-16 bridge samples.</p>
+<p>Bridge sample selection strategy: Start by choosing samples with at most 10% missingness (sampleMissingFreq = 0.1), and in case there are not enough samples to output, increase the threshold to 20% (sampleMissingFreq = 0.2).</p>
+<div id="function-arguments-2" class="section level3">
+<h3>Function arguments</h3>
+<ul>
+<li>df: tibble/data frame in long format such as produced by the read_NPX function.</li>
+<li>sampleMissingFreq: The threshold for sample wise missingness.</li>
+<li>n: Number of bridge samples to be selected.</li>
+</ul>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Select overlapping samples</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">olink_bridgeselector</span>(<span class="at">df =</span> npx_data1, </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">sampleMissingFreq =</span> <span class="fl">0.1</span>,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">n =</span> <span class="dv">8</span>)</span></code></pre></div>
+</div>
+<div id="function-output-2" class="section level3">
+<h3>Function output</h3>
+<p>Tibble with sample IDs and mean NPX for the pre-defined number of bridging samples.</p>
+</div>
+</div>
+<div id="normalizing-npx-data-olink_normalization" class="section level2">
+<h2>Normalizing NPX data (olink_normalization)</h2>
+<p>The olink_normalization is a function used to normalize NPX values between two different dataframes/projects which have been ran at different times. Commonly, there is a shift in (mean) NPX values between runs, however, the spread of the data remains the same. This is why normalization between dataframes/projects is required. When normalization is performed, one of the two provided dataframes/projects shall be used as a reference. If two dataframes/projects have been normalized to one another, Olink® by default uses the chronologically older one as reference. The function handles four different types of normalization:</p>
+<ul>
+<li><strong>Bridging normalization</strong>: One of the dataframes is adjusted to another using overlapping samples (bridge samples). The overlapping samples should have the same IDs between dataframes, and adjustment is made using the median of the paired differences between the bridge samples. The two dataframes are provided as the inputs df1 and df2, while the one being used as reference is specified by the reference_project and the overlapping samples are specified by the overlapping_samples_df1. Only overlapping_samples_df1 should be provided regardless of which dataframe is used as reference_project.</li>
+<li><strong>Subset normalization</strong>: A subset of samples is used to normalize two dataframes, one of which is used as a reference_project. Adjustment is made using the differences of medians between the sample subsets from the two dataframes. Both overlapping_samples_df1 and overlapping_samples_df2 should be provided as input. The sample IDs do not need to overlap.</li>
+<li><strong>Intensity normalization</strong>: A version of subset normalization where all samples (except control samples) from the dataframes are used as overlapping_samples_df1 and overlapping_samples_df2, respectively.</li>
+<li><strong>Reference median normalization</strong>: Works only on one dataframe. This is effectively subset normalization, but using difference of medians to pre-recorded median values. df1, overlapping_samples_df1 and reference_medians need to be specified. Adjustment of df1 is made using the differences in median between the overlapping samples and the reference medians.</li>
+</ul>
+<div id="function-arguments-3" class="section level3">
+<h3>Function arguments</h3>
+<ul>
+<li>df1: First dataframe to be used in normalization (required).</li>
+<li>df2: Second dataframe to be used in normalization.</li>
+<li>overlapping_samples_df1: Samples to be used for adjustment factor calculation in df1 (required).</li>
+<li>overlapping_samples_df2: Samples to be used for adjustment factor calculation in df2.</li>
+<li>df1_project_nr: Project name of first dataset.</li>
+<li>df2_project_nr: Project name of second dataset.</li>
+<li>reference_project: Project name of reference_project. Needs to be the same as either df1_project_nr or df2_project_nr. The project to which the second project is to be adjusted to.</li>
+<li>reference_medians: Dataframe which needs to contain columns “OlinkID”, and “Reference_NPX”. Used for reference median normalization.</li>
+</ul>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Find overlapping samples</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>overlap_samples <span class="ot">&lt;-</span> <span class="fu">intersect</span>(npx_data1<span class="sc">$</span>SampleID, npx_data2<span class="sc">$</span>SampleID) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">str_detect</span>(., <span class="st">&#39;CONTROL_SAMPLE&#39;</span>)) <span class="sc">%&gt;%</span> <span class="co">#Remove control samples</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(.)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform Bridging normalization</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="fu">olink_normalization</span>(<span class="at">df1 =</span> npx_data1, </span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>                    <span class="at">df2 =</span> npx_data2, </span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>                    <span class="at">overlapping_samples_df1 =</span> overlap_samples,</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>                    <span class="at">df1_project_nr =</span> <span class="st">&#39;20200001&#39;</span>,</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>                    <span class="at">df2_project_nr =</span> <span class="st">&#39;20200002&#39;</span>,</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>                    <span class="at">reference_project =</span> <span class="st">&#39;20200001&#39;</span>)</span></code></pre></div>
+</div>
+<div id="function-output-3" class="section level3">
+<h3>Function output</h3>
+<p>A tibble of NPX data in long format containing normalized NPX values, including adjustment factors:</p>
+<ul>
+<li>SampleID: Sample names or IDs.</li>
+<li>Index: Unique number for each SampleID. It is used to make up for non unique sample IDs.</li>
+<li>OlinkID: Unique ID for each assay assigned by Olink®. In case the assay is included in more than one panels it will have a different OlinkID in each one.</li>
+<li>UniProt: UniProt ID.</li>
+<li>Assay: Common gene name for the assay.</li>
+<li>MissingFreq: Missing frequency for the OlinkID, i.e. frequency of samples with NPX value below limit of detection (LOD).</li>
+<li>Panel: Olink Panel that samples ran on. Read more about Olink Panels here: <a href="https://www.olink.com/products-services/">https://www.olink.com/products-services/</a>.</li>
+<li>Panel_Version: Version of the panel. A new panel version might include some different or improved assays.</li>
+<li>PlateID: Name of the plate.</li>
+<li>QC_Warning: Indication whether the sample passed Olink QC. Read more here: <a href="https://www.olink.com/faq/how-is-quality-control-of-the-data-performed/">https://www.olink.com/faq/how-is-quality-control-of-the-data-performed/</a>.</li>
+<li>LOD: Limit of detection (LOD) is the minimum level of an individual protein that can be measured. LOD is defined as 3 times the standard deviation over background.</li>
+<li>NPX: Normalized Protein eXpression, is Olink®’s unit of protein expression level in a log<sub>2</sub> scale. The majority of the functions of this package use NPX values for calculations. Read more about NPX here: <a href="https://www.olink.com/faq/what-is-npx/">https://www.olink.com/faq/what-is-npx/</a>.</li>
+<li>Project: Name given from the dataframe of origin.</li>
+<li>Adj_factor: Adjustment factor, i.e. how much was added to or subtracted from the original NPX value.</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="statistical-analysis" class="section level1">
+<h1>Statistical analysis</h1>
+<div id="t-test-analysis-olink_ttest" class="section level2">
+<h2>T-test analysis (olink_ttest)</h2>
+<p>The olink_ttest function performs a Welch 2-sample t-test or paired t-test at confidence level 0.95 for every protein (by OlinkID) for a given grouping variable using the function <em>t.test</em> from the R library <em>stats</em> and corrects for multiple testing using the Benjamini-Hochberg method (“fdr”) using the function <em>p.adjust</em> from the R library <em>stats</em>. Adjusted p-values are logically evaluated towards adjusted p-value&lt;0.05. The resulting t-test table is arranged by ascending p-values.</p>
+<div id="function-arguments-4" class="section level3">
+<h3>Function arguments</h3>
+<ul>
+<li>df: NPX data frame in long format should minimally contain protein name (Assay), OlinkID, UniProt, Panel and an outcome factor with 2 levels.</li>
+<li>variable: Character value that should represent a column in the df to be used as a grouping variable. Needs to have exactly 2 levels.</li>
+<li>pair_id: Character value indicating which column contains the paired sample identifier. Only used for paired t-tests.</li>
+</ul>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">olink_ttest</span>(<span class="at">df =</span> npx_data1,</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">variable =</span> <span class="st">&#39;Treatment&#39;</span>)</span></code></pre></div>
+</div>
+<div id="function-output-4" class="section level3">
+<h3>Function output</h3>
+<p>A tibble with the following columns:</p>
+<ul>
+<li>Assay <em>&lt;chr&gt;</em>: Assay name.</li>
+<li>OlinkID <em>&lt;chr&gt;</em>: Unique Olink® ID.</li>
+<li>UniProt <em>&lt;chr&gt;</em>: UniProt ID.</li>
+<li>Panel <em>&lt;chr&gt;</em>: Olink® Panel.</li>
+<li>estimate <em>&lt;dbl&gt;</em>: Difference in mean NPX between groups.</li>
+<li>statistic <em>&lt;dbl&gt;</em>: Value of the t-statistic.</li>
+<li>p.value <em>&lt;dbl&gt;</em>: P-value for the test.</li>
+<li>parameter <em>&lt;dbl&gt;</em>: Degrees of freedom for the t-statistic.</li>
+<li>conf.low <em>&lt;dbl&gt;</em>: Low bound of the confidence interval for the mean.</li>
+<li>conf.high <em>&lt;dbl&gt;</em>: High bound of the confidence interval for the mean.</li>
+<li>method <em>&lt;chr&gt;</em>: Method that was used.</li>
+<li>alternative <em>&lt;chr&gt;</em>: : Description of the alternative hypothesis.</li>
+<li>Adjusted_pval <em>&lt;dbl&gt;</em>: Adjusted p-value for the test (Benjamini &amp; Hochberg).</li>
+<li>Threshold <em>&lt;chr&gt;</em>: Text indication if assay is significant (adjusted p-value &lt; 0.05).</li>
+</ul>
+</div>
+</div>
+<div id="analysis-for-variance-anova-olink_anova" class="section level2">
+<h2>Analysis for variance (ANOVA) (olink_anova)</h2>
+<p>The olink_anova is a wrapper function that performs an ANOVA F-test for each assay using the function <em>Anova</em> from the R library <em>car</em> and Type III sum of squares. The function handles both factor and numerical variables, and/or confounding factors.</p>
+<p>Samples with missing variable information or factor levels are excluded from the analysis. Character columns in the input data frame are converted to factors. The automatic handling of the data from above is announced by a message if the flag <em>verbose=TRUE</em>.</p>
+<p>Crossed/interaction analysis, i.e. A*B formula notation, is inferred from the variable argument in the following cases:</p>
+<ul>
+<li>c(‘A’,‘B’)</li>
+<li>c(‘A:B’)</li>
+<li>c(‘A:B’, ‘B’) or c(‘A:B’, ‘A’)</li>
+</ul>
+<p>Inference is specified in a message if <em>verbose=TRUE</em>.</p>
+<p>For covariates, crossed analyses need to be specified explicitly, i.e. two main effects will not be expanded with a c(‘A’,‘B’) notation. Main effects present in the variable take precedence. The formula notation of the final model is specified in a message if <em>verbose=TRUE</em>.</p>
+<p>Adjusted p-values are calculated using the function <em>p.adjust</em> from the R library <em>stats</em> with the Benjamini &amp; Hochberg (1995) method (“fdr”). The threshold is determined by logic evaluation of Adjusted_pval &lt; 0.05. Covariates are not included in the p-value adjustment.</p>
+<div id="function-arguments-5" class="section level3">
+<h3>Function arguments</h3>
+<ul>
+<li>df: NPX data frame in long format should minimally contain protein name (Assay), OlinkID, UniProt, Panel and an outcome factor with at least 3 levels.</li>
+<li>variable: Single character value or character array. In case of single character then that should represent a column in the df. Otherwise, if length &gt; 1, the included variable names will be used in crossed analyses. It can also accept the notations ‘:’ or ’*’.</li>
+<li>outcome: Name of the column from df that contains the dependent variable. Default: NPX.</li>
+<li>covariates: Single character value or character array. Default: NULL. Confounding factors to include in the analysis. In case of single character then that should represent a column in the df. It can also accept the notations ‘:’ or ’*’, while crossed analysis will not be inferred from main effects.</li>
+<li>return.covariates: Logical. Default: False. Returns F-test results for the covariates. Note: Adjusted p-values will be NA for covariates.</li>
+<li>verbose: Logical. Default: True. If information about removed samples, factor conversion and final model formula is to be printed to the console.</li>
+</ul>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># One-way ANOVA, no covariates</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>anova_results_oneway <span class="ot">&lt;-</span> <span class="fu">olink_anova</span>(<span class="at">df =</span> npx_data1, </span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">variable =</span> <span class="st">&#39;Site&#39;</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Two-way ANOVA, no covariates</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>anova_results_twoway <span class="ot">&lt;-</span> <span class="fu">olink_anova</span>(<span class="at">df =</span> npx_data1, </span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">variable =</span> <span class="fu">c</span>(<span class="st">&#39;Site&#39;</span>, <span class="st">&#39;Time&#39;</span>))</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co"># One-way ANOVA, Treatment as covariates</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>anova_results_oneway <span class="ot">&lt;-</span> <span class="fu">olink_anova</span>(<span class="at">df =</span> npx_data1, </span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">variable =</span> <span class="st">&#39;Site&#39;</span>,</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">covariates =</span> <span class="st">&#39;Treatment&#39;</span>)</span></code></pre></div>
+</div>
+<div id="function-output-5" class="section level3">
+<h3>Function output</h3>
+<p>A tibble with the following columns:</p>
+<ul>
+<li>Assay <em>&lt;chr&gt;</em>: Assay name.</li>
+<li>OlinkID <em>&lt;chr&gt;</em>: Unique Olink ID.</li>
+<li>UniProt <em>&lt;chr&gt;</em>: UniProt ID.</li>
+<li>Panel <em>&lt;chr&gt;</em>: Olink Panel.</li>
+<li>term <em>&lt;chr&gt;</em>: Name of the variable that was used for the p-value calculation. The “:” between variables indicates interaction between variables.</li>
+<li>df <em>&lt;dbl&gt;</em>: Numerator of degrees of freedom.</li>
+<li>sumsq <em>&lt;dbl&gt;</em>: Sum of squares.</li>
+<li>meansq <em>&lt;dbl&gt;</em>: Mean of squares.</li>
+<li>statistic <em>&lt;dbl&gt;</em>: Value of F-statistic.</li>
+<li>p.value <em>&lt;dbl&gt;</em>: P-value for the test.</li>
+<li>Adjusted_pval <em>&lt;dbl&gt;</em>: Adjusted p-value for the test (Benjamini &amp; Hochberg).</li>
+<li>Threshold <em>&lt;chr&gt;</em>: Text indication if assay is significant (adjusted p-value &lt; 0.05).</li>
+</ul>
+</div>
+</div>
+<div id="post-hoc-anova-analysis-olink_anova_posthoc" class="section level2">
+<h2>Post-hoc ANOVA analysis (olink_anova_posthoc)</h2>
+<p>olink_anova_posthoc performs a post-hoc ANOVA test using the function <em>emmeans</em> from the R library <em>emmeans</em> with Tukey p-value adjustment per assay (by OlinkID) at confidence level 0.95.</p>
+<p>The function handles both factor and numerical variables and/or covariates. The post-hoc test for a numerical variable compares the difference in means of the outcome variable (default: NPX) for 1 standard deviation (SD) difference in the numerical variable, e.g. mean NPX at mean (numerical variable) versus mean NPX at mean (numerical variable) + 1*SD (numerical variable).</p>
+<div id="function-arguments-6" class="section level3">
+<h3>Function arguments</h3>
+<ul>
+<li>df: NPX data frame in long format should minimally contain protein name (Assay), OlinkID, UniProt, Panel and an outcome factor with at least 3 levels.</li>
+<li>olinkid_list: Character vector of OlinkID’s on which to perform the post-hoc analysis. If not specified, all assays in df are used.</li>
+<li>variable: Single character value or character array. In case of single character then that should represent a column in the df. Otherwise, if length &gt; 1, the included variable names will be used in crossed analyses. It can also accept the notations ‘:’ or ’*’.</li>
+<li>covariates: Single character value or character array. Default: NULL. Confounding factors to include in the analysis. In case of single character then that should represent a column in the df. It can also accept the notations ‘:’ or ’*’, while crossed analysis will not be inferred from main effects.</li>
+<li>outcome: Name of the column from df that contains the dependent variable. Default: NPX.</li>
+<li>effect: Term on which to perform the post-hoc analysis. Character vector. Must be subset of or identical to the variable and no adjustment is performed.</li>
+<li>mean_return: Logical. If true, returns the mean of each factor level rather than the difference in means (default). Note that no p-value is returned for mean_return = TRUE.</li>
+<li>verbose: Logical. Default: True. If information about removed samples, factor conversion and final model formula is to be printed to the console.</li>
+</ul>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate the p-value for the ANOVA</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>anova_results_oneway <span class="ot">&lt;-</span> <span class="fu">olink_anova</span>(<span class="at">df =</span> npx_data1, </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">variable =</span> <span class="st">&#39;Site&#39;</span>)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co"># extracting the significant proteins</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>anova_results_oneway_significant <span class="ot">&lt;-</span> anova_results_oneway <span class="sc">%&gt;%</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Threshold <span class="sc">==</span> <span class="st">&#39;Significant&#39;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(OlinkID)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>anova_posthoc_oneway_results <span class="ot">&lt;-</span> <span class="fu">olink_anova_posthoc</span>(<span class="at">df =</span> npx_data1,</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>                                                    <span class="at">olinkid_list =</span> anova_results_oneway_significant,</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>                                                    <span class="at">variable =</span> <span class="st">&#39;Site&#39;</span>,</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>                                                    <span class="at">effect =</span> <span class="st">&#39;Site&#39;</span>)</span></code></pre></div>
+</div>
+<div id="function-output-6" class="section level3">
+<h3>Function output</h3>
+<p>A tibble with the following columns:</p>
+<ul>
+<li>Assay <em>&lt;chr&gt;</em>: Assay name.</li>
+<li>OlinkID <em>&lt;chr&gt;</em>: Unique Olink ID.</li>
+<li>UniProt <em>&lt;chr&gt;</em>: UniProt ID.</li>
+<li>Panel <em>&lt;chr&gt;</em>: Olink Panel.</li>
+<li>term <em>&lt;chr&gt;</em>: Name of the variable that was used for the p-value calculation. The “:” between variables indicates interaction between variables.</li>
+<li>contrast <em>&lt;chr&gt;</em>: Variables (in term) that are compared.<br />
+</li>
+<li>estimate <em>&lt;dbl&gt;</em>: Difference in mean NPX between variables (from contrast).</li>
+<li>conf.low <em>&lt;dbl&gt;</em>: Low bound of the confidence interval for the mean.</li>
+<li>conf.high <em>&lt;dbl&gt;</em>: High bound of the confidence interval for the mean.</li>
+<li>Adjusted_pval <em>&lt;dbl&gt;</em>: Adjusted p-value for the test (Benjamini &amp; Hochberg).</li>
+<li>Threshold <em>&lt;chr&gt;</em>: Text indication if assay is significant (adjusted p-value &lt; 0.05).</li>
+</ul>
+</div>
+</div>
+<div id="linear-mixed-effects-model-analysis-olink_lmer" class="section level2">
+<h2>Linear mixed effects model analysis (olink_lmer)</h2>
+<p>The olink_lmer fits a linear mixed effects model for every protein (by OlinkID) in every panel, using the function <em>lmer</em> from the R library <em>lmerTest</em> and the function <em>anova</em> from the R library <em>stats</em>. The function handles both factor and numerical variables and/or covariates.</p>
+<p>Samples with missing variable information or factor levels are excluded from the analysis. Character columns in the input data frame are converted to factors. The automatic handling of the data from above is announced by a message if the flag <em>verbose=TRUE</em>.</p>
+<p>Crossed/interaction analysis, i.e. A*B formula notation, is inferred from the variable argument in the following cases:</p>
+<ul>
+<li>c(‘A’,‘B’)</li>
+<li>c(‘A:B’)</li>
+<li>c(‘A:B’, ‘B’) or c(‘A:B’, ‘A’)</li>
+</ul>
+<p>Inference is specified in a message if <em>verbose=TRUE</em>.</p>
+<p>For covariates, crossed analyses need to be specified explicitly, i.e. two main effects will not be expanded with a c(‘A’,‘B’) notation. Main effects present in the variable take precedence. The formula notation of the final model is specified in a message if <em>verbose=TRUE</em>.</p>
+<p>Adjusted p-values are calculated using the function <em>p.adjust</em> from the R library <em>stats</em> with the Benjamini &amp; Hochberg (1995) method (“fdr”). The threshold is determined by logic evaluation of Adjusted_pval &lt; 0.05. Covariates are not included in the p-value adjustment.</p>
+<div id="function-arguments-7" class="section level3">
+<h3>Function arguments</h3>
+<ul>
+<li>df: NPX data frame in long format should minimally contain protein name (Assay), OlinkID, UniProt, Panel and 1-2 variables with at least 2 levels and subject ID.</li>
+<li>variable: Single character value or character array. In case of single character then that should represent a column in the df. Otherwise, if length &gt; 1, the included variable names will be used in crossed analyses. It can also accept the notations ‘:’ or ’*’.</li>
+<li>outcome: Name of the column from df that contains the dependent variable. Default: NPX.</li>
+<li>random: Single character value or character array with random effects.</li>
+<li>covariates: Single character value or character array. Default: NULL. Confounding factors to include in the analysis. In case of single character then that should represent a column in the df. It can also accept the notations ‘:’ or ’*’, while crossed analysis will not be inferred from main effects.</li>
+<li>return.covariates: Logical. Default: False. Returns F-test results for the covariates. Note: Adjusted p-values will be NA for covariates.</li>
+<li>verbose: Logical. Default: True. If information about removed samples, factor conversion and final model formula is to be printed to the console.</li>
+</ul>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Linear mixed model with one variable.</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>lmer_results_oneway <span class="ot">&lt;-</span> <span class="fu">olink_lmer</span>(<span class="at">df =</span> npx_data1, </span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">variable =</span> <span class="st">&#39;Site&#39;</span>,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">random =</span> <span class="st">&#39;Subject&#39;</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Linear mixed model with two variables.</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>lmer_results_twoway <span class="ot">&lt;-</span> <span class="fu">olink_lmer</span>(<span class="at">df =</span> npx_data1, </span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">variable =</span> <span class="fu">c</span>(<span class="st">&#39;Site&#39;</span>, <span class="st">&#39;Treatment&#39;</span>),</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">random =</span> <span class="st">&#39;Subject&#39;</span>)</span></code></pre></div>
+</div>
+<div id="function-outcome" class="section level3">
+<h3>Function outcome</h3>
+<p>A tibble with the following columns:</p>
+<ul>
+<li>Assay <em>&lt;chr&gt;</em>: Assay name.</li>
+<li>OlinkID <em>&lt;chr&gt;</em>: Unique Olink ID.</li>
+<li>UniProt <em>&lt;chr&gt;</em>: UniProt ID.</li>
+<li>Panel <em>&lt;chr&gt;</em>: Olink Panel.</li>
+<li>term <em>&lt;chr&gt;</em>: Name of the variable that was used for the p-value calculation. The “:” between variables indicates interaction between variables.</li>
+<li>sumsq <em>&lt;dbl&gt;</em>: Sum of squares.</li>
+<li>meansq <em>&lt;dbl&gt;</em>: Mean of squares.</li>
+<li>NumDF <em>&lt;dbl&gt;</em>: Numerator of degrees of freedom.</li>
+<li>DenDF <em>&lt;dbl&gt;</em>: Denominator of degrees of freedom.</li>
+<li>statistic <em>&lt;dbl&gt;</em>: Value of F-statistic.</li>
+<li>p.value <em>&lt;dbl&gt;</em>: P-value for the test.</li>
+<li>Adjusted_pval <em>&lt;dbl&gt;</em>: Adjusted p-value for the test (Benjamini &amp; Hochberg).</li>
+<li>Threshold <em>&lt;chr&gt;</em>: Text indication if assay is significant (adjusted p-value &lt; 0.05).</li>
+</ul>
+</div>
+</div>
+<div id="post-hoc-linear-mixed-effects-model-analysis-olink_lmer_posthoc" class="section level2">
+<h2>Post-hoc linear mixed effects model analysis (olink_lmer_posthoc)</h2>
+<p>The olink_lmer_posthoc function is similar to olink_lmer but performs a post-hoc analysis based on a linear mixed model effects model using the function <em>lmer</em> from the R library <em>lmerTest</em> and the function <em>emmeans</em> from the R library <em>emmeans</em>. The function handles both factor and numerical variables and/or covariates. Differences in estimated marginal means are calculated for all pairwise levels of a given output variable. Degrees of freedom are estimated using Satterthwaite’s approximation. The post-hoc test for a numerical variable compares the difference in means of the outcome variable (default: NPX) for 1 standard deviation difference in the numerical variable, e.g. mean NPX at mean(numerical variable) versus mean NPX at mean(numerical variable) + 1*SD(numerical variable). The output tibble is arranged by ascending adjusted p-values.</p>
+<div id="function-arguments-8" class="section level3">
+<h3>Function arguments</h3>
+<ul>
+<li>df: NPX data frame in long format should minimally contain protein name (Assay), OlinkID, UniProt, Panel and 1-2 variables with at least 2 levels and subject ID.</li>
+<li>variable: Single character value or character array. In case of single character then that should represent a column in the df. Otherwise, if length &gt; 1, the included variable names will be used in crossed analyses. It can also accept the notations ‘:’ or ’*’.</li>
+<li>olinkid_list: Character vector of OlinkID’s on which to perform the post-hoc analysis. If not specified, all assays in df are used.</li>
+<li>effect: Term on which to perform the post-hoc analysis. Character vector. Must be subset of or identical to the variable.</li>
+<li>outcome: Name of the column from df that contains the dependent variable. Default: NPX.</li>
+<li>random: Single character value or character array with random effects.</li>
+<li>covariates: Single character value or character array. Default: NULL. Confounding factors to include in the analysis. In case of single character then that should represent a column in the df. It can also accept the notations ‘:’ or ’*’, while crossed analysis will not be inferred from main effects.</li>
+<li>mean_return: Logical. If true, returns the mean of each factor level rather than the difference in means (default). Note that no p-value is returned for mean_return = TRUE and no adjustment is performed.</li>
+<li>verbose: Logical. Default: True. If information about removed samples, factor conversion and final model formula is to be printed to the console.</li>
+</ul>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Linear mixed model with two variables.</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>lmer_results_twoway <span class="ot">&lt;-</span> <span class="fu">olink_lmer</span>(<span class="at">df =</span> npx_data1, </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">variable =</span> <span class="fu">c</span>(<span class="st">&#39;Site&#39;</span>, <span class="st">&#39;Treatment&#39;</span>),</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">random =</span> <span class="st">&#39;Subject&#39;</span>)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co"># extracting the significant proteins</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>lmer_results_twoway_significant <span class="ot">&lt;-</span> lmer_results_twoway <span class="sc">%&gt;%</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Threshold <span class="sc">==</span> <span class="st">&#39;Significant&#39;</span>, term <span class="sc">==</span> <span class="st">&#39;Treatment&#39;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(OlinkID)</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="co"># performing post-hoc analysis</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>lmer_posthoc_twoway_results <span class="ot">&lt;-</span> <span class="fu">olink_lmer_posthoc</span>(<span class="at">df =</span> npx_data1,</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>                                                  <span class="at">olinkid_list =</span> lmer_results_twoway_significant,</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>                                                  <span class="at">variable =</span> <span class="fu">c</span>(<span class="st">&#39;Site&#39;</span>, <span class="st">&#39;Treatment&#39;</span>),</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>                                                  <span class="at">random =</span> <span class="st">&#39;Subject&#39;</span>,</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>                                                  <span class="at">effect =</span> <span class="st">&#39;Treatment&#39;</span>) </span></code></pre></div>
+</div>
+<div id="function-output-7" class="section level3">
+<h3>Function output</h3>
+<p>A tibble with the following columns:</p>
+<ul>
+<li>Assay <em>&lt;chr&gt;</em>: Assay name.</li>
+<li>OlinkID <em>&lt;chr&gt;</em>: Unique Olink ID.</li>
+<li>UniProt <em>&lt;chr&gt;</em>: UniProt ID.</li>
+<li>Panel <em>&lt;chr&gt;</em>: Olink Panel.</li>
+<li>term <em>&lt;chr&gt;</em>: Name of the variable that was used for the p-value calculation. The “:” between variables indicates interaction between variables.</li>
+<li>contrast <em>&lt;chr&gt;</em>: Variables (in term) that are compared.<br />
+</li>
+<li>estimate <em>&lt;dbl&gt;</em>: Difference in mean NPX between variables (from contrast).</li>
+<li>conf.low <em>&lt;dbl&gt;</em>: Low bound of the confidence interval for the mean.</li>
+<li>conf.high <em>&lt;dbl&gt;</em>: High bound of the confidence interval for the mean.</li>
+<li>Adjusted_pval <em>&lt;dbl&gt;</em>: Adjusted p-value for the test (Benjamini &amp; Hochberg).</li>
+<li>Threshold <em>&lt;chr&gt;</em>: Text indication if assay is significant (adjusted p-value &lt; 0.05).</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="visualization" class="section level1">
+<h1>Visualization</h1>
+<div id="boxplots-for-outcomes-olink_boxplot" class="section level2">
+<h2>Boxplots for outcomes (olink_boxplot)</h2>
+<p>The olink_boxplot function is used to generate boxplots of NPX values stratified on a variable for a given list of proteins. olink_boxplot uses the functions <em>ggplot</em> and <em>geom_boxplot</em> of the R library <em>ggplot2</em>.</p>
+<div id="function-arguments-9" class="section level3">
+<h3>Function arguments</h3>
+<ul>
+<li>df: NPX data frame in long format should minimally contain protein name (Assay), OlinkID, UniProt and a grouping variable.</li>
+<li>variable: Single character value indicating the column name to use as a grouping variable in the x axis.</li>
+<li>olinkid_list: Character vector of OlinkID’s that should be used for the boxplot. If not specified, all assays in df are used.</li>
+<li>verbose: Logical. Default: False. Flag indicating if plots shall be printed additionally to assigned to a list variable.</li>
+<li>number_of_proteins_per_plot: Number of boxplots to include in the facets plot. Default 6.</li>
+</ul>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>plot <span class="ot">&lt;-</span> npx_data1 <span class="sc">%&gt;%</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>() <span class="sc">%&gt;%</span> <span class="co"># removing missing values which exists for Site</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">olink_boxplot</span>(<span class="at">variable =</span> <span class="st">&quot;Site&quot;</span>, </span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">olinkid_list =</span> <span class="fu">c</span>(<span class="st">&quot;OID01216&quot;</span>, <span class="st">&quot;OID01217&quot;</span>),</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">number_of_proteins_per_plot  =</span> <span class="dv">2</span>)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>plot[[<span class="dv">1</span>]]</span></code></pre></div>
+<p><img src="data:image/png;base64,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SijZ8xAEsLq8dOWfbgYUWwAvQQCry5tsARQCeAkCWF0eYwDfCV0A13AUKDIQYDE4DxAZCOAOBPAQBHAHAngIArgDATwEAdyBAB6CAO5AAA9BAHcggIcggDsQwEMQwB0I4CG+CCAB/wQABHAIAngIArgDATwEAdyBAB7StACQD9nzEARwB9nzEARwB9nzEARwB9nzEARwB9nzEARwB9nzEARwB9nzEARwB9nzEARwB9nzEARwB9nzEARwB9nzEARwB9nzEARwB9nzEARwB9nzEARwB9nzkAUFgFLIXh1qdufFYa0EokEAEA0CgGgQAESDACAaBADRIACIBgFANAjQPJsrnc6jF1T/zKpSv227MlAMAjTO9lMXleqfV+ojpTYears2UAwCNM7mkcljBPAdBGic7ZXV9G+yC/TeF79weFX13+h0jnzQcq0gGwRonlsr39fdXY8B9Bag/8MLSl19rO1aQSYIYIH+u8l6fyzAZkdzpDwMWgABrHDrzGNjATZY+XsMAtgh6f1jARgIewwCWOLcWIDNRy62XRnIBQEa571nkl+3nrqoBUgPib7zEIeAvAUBmudqMubVRz8TAba//cCPVf/cFzudH7ddK8gEAUA0CACiQQAQDQKAaBAARIMAIBoEANEgAIgGAUA0CACi+X9ffPKshDHHyAAAAABJRU5ErkJggg==" /><!-- --></p>
+</div>
+<div id="function-output-8" class="section level3">
+<h3>Function output</h3>
+<p>A list of objects of class <em>ggplot</em>.</p>
+<p><strong>Note:</strong> Please note that plots will not appear in the <em>plots</em> panel of <em>Rstudio</em> if not assigned to a variable and printing it (see sample code above).</p>
+</div>
+</div>
+<div id="boxplots-for-qc-olink_dist_plot" class="section level2">
+<h2>Boxplots for QC (olink_dist_plot)</h2>
+<p>The olink_dist_plot function generates boxplots of NPX values for each sample, faceted by Olink panel. This is used as an initial QC step to identify potential outliers. olink_dist_plot uses the functions <em>ggplot</em> and <em>geom_boxplot</em> of the R library <em>ggplot2</em>.</p>
+<div id="function-arguments-10" class="section level3">
+<h3>Function arguments</h3>
+<ul>
+<li>df: NPX data frame in long format should minimally contain SampleID, NPX and Panel.</li>
+<li>color_g: Character value indicating the column name that should be used as fill color. Default: QC_Warning.</li>
+</ul>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>npx_data1 <span class="sc">%&gt;%</span> </span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Panel <span class="sc">==</span> <span class="st">&#39;Olink Cardiometabolic&#39;</span>) <span class="sc">%&gt;%</span> <span class="co"># For this example only plotting one panel.</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">olink_dist_plot</span>() <span class="sc">+</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_blank</span>()) <span class="co"># Due to the number of samples one can remove the text or rotate it</span></span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+</div>
+<div id="function-output-9" class="section level3">
+<h3>Function output</h3>
+<p>A list of objects of class <em>ggplot</em>.</p>
+</div>
+</div>
+<div id="point-range-plot-for-lmer-olink_lmer_plot" class="section level2">
+<h2>Point-range plot for LMER (olink_lmer_plot)</h2>
+<p>The function olink_lmer_plot generates a point-range plot for a given list of proteins based on linear mixed effect model. The points illustrate the mean NPX level for each group and the error bars illustrate 95% confidence intervals. Facets are labeled by the protein name and corresponding OlinkID for the protein.</p>
+<div id="function-arguments-11" class="section level3">
+<h3>Function arguments</h3>
+<ul>
+<li>df: NPX data frame in long format should minimally contain protein name (Assay), OlinkID, UniProt, Panel and 1-2 variables with at least 2 levels and subject ID.</li>
+<li>variable: Single character value or character array. In case of single character then that should represent a column in the df. Otherwise, if length &gt; 1, the included variable names will be used in crossed analyses. It can also accept the notations ‘:’ or ’*’.</li>
+<li>outcome: Name of the column from df that contains the dependent variable. Default: NPX.</li>
+<li>random: Single character value or character array with random effects.</li>
+<li>covariates: Single character value or character array. Default: NULL. Confounding factors to include in the analysis. In case of single character then that should represent a column in the df. It can also accept the notations ‘:’ or ’*’, while crossed analysis will not be inferred from main effects.</li>
+<li>x_axis_variable: Character. Which main effect to use as x-axis in the plot.</li>
+<li>col_variable: Character. If provided, the interaction effect col_variable:x_axis_variable will be plotted with x_axis_variable on the x-axis and col_variable as color.</li>
+<li>number_of_proteins_per_plot: Number plots to include in the list of point-range plots. Defaults to 6 plots per figure.</li>
+<li>verbose: Logical. Default: True. If information about removed samples, factor conversion and final model formula is to be printed to the console.</li>
+</ul>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>plot <span class="ot">&lt;-</span> <span class="fu">olink_lmer_plot</span>(<span class="at">df =</span> npx_data1, </span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">olinkid_list =</span> <span class="fu">c</span>(<span class="st">&quot;OID01216&quot;</span>, <span class="st">&quot;OID01217&quot;</span>), </span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">variable =</span> <span class="fu">c</span>(<span class="st">&#39;Site&#39;</span>, <span class="st">&#39;Treatment&#39;</span>), </span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">x_axis_variable =</span>  <span class="st">&#39;Site&#39;</span>,</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>                        <span class="at">col_variable =</span> <span class="st">&#39;Treatment&#39;</span>,</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>                        <span class="at">random =</span> <span class="st">&#39;Subject&#39;</span>)</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>plot[[<span class="dv">1</span>]]</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+</div>
+<div id="function-output-10" class="section level3">
+<h3>Function output</h3>
+<p>A list of objects of class <em>ggplot</em>.</p>
+<p><strong>Note:</strong> Please note that plots will not appear in the <em>plots</em> panel of <em>Rstudio</em> if not assigned to a variable and printing it (see sample code above).</p>
+</div>
+</div>
+<div id="principal-components-analysis-pca-plot-olink_pca_plot" class="section level2">
+<h2>Principal components analysis (PCA) plot (olink_pca_plot)</h2>
+<p>Generates PCA projection of all samples from NPX data along two principal components (Default PC2 vs PC1) colored by the variable QC_Warning and including the percentage of explained variance. The function used the functions <em>prcomp</em> and <em>ggplot</em> from the R libraries <em>stats</em> and <em>ggplot2</em>, respectively. By default, the values scaled and centered in the PCA and proteins with missing NPX values removed from the corresponding assay(s). Unique sample names are required. Imputation by median value is done for assays with missingness &lt;10% and for multi-plate projects, and for missingness &lt;5% for single plate projects.</p>
+<p>The values are by default scaled and centered in the PCA and proteins with missing NPX values are by default removed from the corresponding assay. Unique sample names are required. Imputation by the median is done for assays with missingness &lt;10% for multi-plate projects and &lt;5% for single plate projects. The plot is printed, and a list of ggplot objects is returned.</p>
+<p>If byPanel = TRUE, the data processing (imputation of missing values etc) and subsequent PCA is performed separately per panel. A faceted plot is printed, while the individual ggplot objects are returned.</p>
+<p>The arguments outlierDefX and outlierDefY can be used to identify outliers in the PCA. Samples more than +/-outlierDef[X,Y] standard deviations from the mean of the plotted PC will be labelled. Both arguments have to be specified.</p>
+<div id="function-arguments-selection" class="section level3">
+<h3>Function arguments (selection)</h3>
+<ul>
+<li>df: NPX data frame in long format should minimally contain SampleID, NPX and column that will be used for grouping/coloring.</li>
+<li>color_g: Character value indicating the column name that should be used as fill color. Default QC_Warning.</li>
+<li>x_val: Integer indicating which principal component to plot along the x-axis. Default 1.</li>
+<li>y_val: Integer indicating which principal component to plot along the y-axis. Default 2.</li>
+<li>label_samples: Logical. If TRUE, points are replaced with SampleID. Default FALSE.</li>
+<li>drop_assays: Logical. All assays with any missing values will be dropped. Takes precedence over sample drop.</li>
+<li>drop_samples: Logical. All samples with any missing values will be dropped.</li>
+<li>n_loadings: Integer. Plot the top n_loadings ranked by size.</li>
+<li>loadings_list: Character vector indicating for which OlinkID’s to plot loadings. Arguments n_loadings and loadings_list can be used together.</li>
+<li>byPanel: Logical. Perform the PCA per panel (default FALSE)</li>
+<li>outlierDefX: (Optional) The number standard deviations along the PC plotted on the x-axis that defines an outlier.</li>
+<li>outlierDefY: (Optional) The number standard deviations along the PC plotted on the y-axis that defines an outlier.</li>
+<li>OutlierLines: Logical. Draw dashed lines at +/-outlierDef[X,Y] standard deviations from the mean of the plotted PCs (default FALSE)</li>
+<li>verbose: Logical. Default: True. If information about removed samples, factor conversion and final model formula is to be printed to the console.</li>
+<li>quiet: Logical. Default: False. If TRUE, the resulting plot is not printed.</li>
+</ul>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>npx_data1 <span class="sc">%&gt;%</span> </span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">str_detect</span>(SampleID, <span class="st">&#39;CONTROL_SAMPLE&#39;</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">olink_pca_plot</span>(<span class="at">df =</span> .,</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">color_g =</span> <span class="st">&quot;QC_Warning&quot;</span>, <span class="at">byPanel =</span> <span class="cn">TRUE</span>)  </span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+</div>
+<div id="function-output-11" class="section level3">
+<h3>Function output</h3>
+<p>A list of objects of class <em>ggplot</em> (silently returned). Plots are also printed unless option <code>quiet = TRUE</code> is set. If outlierDefX and outlierDefY are specified, a list of outliers can be extracted from the <strong>ggplot</strong> object based on these parameters.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>npx_data <span class="ot">&lt;-</span> npx_data1 <span class="sc">%&gt;%</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">SampleID =</span> <span class="fu">paste</span>(SampleID, <span class="st">&quot;_&quot;</span>, Index, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>))</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">olink_pca_plot</span>(<span class="at">df=</span>npx_data, <span class="at">color_g =</span> <span class="st">&quot;QC_Warning&quot;</span>,</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">outlierDefX =</span> <span class="fl">2.5</span>, <span class="at">outlierDefY =</span> <span class="dv">4</span>, <span class="at">byPanel =</span> <span class="cn">TRUE</span>, <span class="at">quiet =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(g, <span class="cf">function</span>(x){x<span class="sc">$</span>data}) <span class="sc">%&gt;%</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Outlier <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(SampleID, Outlier, Panel)</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   SampleID Outlier           Panel</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1  B22_103       1 Cardiometabolic</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2  B68_149       1 Cardiometabolic</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3    B9_88       1 Cardiometabolic</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4   A28_30       1    Inflammation</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5   A57_59       1    Inflammation</span></span></code></pre></div>
+</div>
+</div>
+<div id="scatterplot-for-qc-olink_qc_plot" class="section level2">
+<h2>Scatterplot for QC (olink_qc_plot)</h2>
+<p>The olink_qc_plot function generates a facet plot per Panel using ggplot and ggplot2::geom_point and stats::IQR plotting IQR vs. median for all samples. This is a good first check to find out if any samples have a tendency to be classified as outliers. Horizontal dashed lines indicate +/-3 standard deviations from the mean IQR. Vertical dashed lines indicate +/-3 standard deviations from the mean sample median.</p>
+<div id="function-arguments-12" class="section level3">
+<h3>Function arguments</h3>
+<ul>
+<li>df: NPX data frame in long format should minimally contain SampleID, Index, NPX and Panel.</li>
+<li>color_g: Character value indicating the column name that should be used as fill color. Default QC_Warning.</li>
+<li>plot_index: Logical. Default FALSE. If FALSE, a point will be plotted for a sample. If TRUE, a sample’s unique index number is displayed.</li>
+<li>label_outliers: Logical. If TRUE, an outlier sample will be labeled by its SampleID.</li>
+<li>IQR_outlierDef: The number of standard deviations from the mean IQR that defines an outlier (default 3)</li>
+<li>median_outlierDef: The number of standard deviations from the mean sample median that defines an outlier. (default 3)</li>
+<li>outlierLines: Logical. Draw dashed lines at +/-IQR_outlierDef and +/-median_outlierDef standard deviations from the mean IQR and sample median respectively (default TRUE)</li>
+<li>facetNrow: Integer. The number of rows that the panels are arranged on.</li>
+<li>facetNcol: Integer. The number of columns that the panels are arranged on.</li>
+</ul>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>npx_data1 <span class="sc">%&gt;%</span> </span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">str_detect</span>(SampleID, <span class="st">&#39;CONTROL_SAMPLE&#39;</span>),</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>         Panel <span class="sc">==</span> <span class="st">&#39;Olink Inflammation&#39;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">olink_qc_plot</span>(<span class="at">color_g =</span> <span class="st">&quot;QC_Warning&quot;</span>)   </span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+</div>
+<div id="function-output-12" class="section level3">
+<h3>Function output</h3>
+<p>An object of class <em>ggplot</em>. A list of outliers can be extracted from the <strong>ggplot</strong> object.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>qc <span class="ot">&lt;-</span> <span class="fu">olink_qc_plot</span>(npx_data1, <span class="at">color_g =</span> <span class="st">&quot;QC_Warning&quot;</span>, <span class="at">IQR_outlierDef =</span> <span class="dv">3</span>, <span class="at">median_outlierDef =</span> <span class="dv">3</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>qc<span class="sc">$</span>data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Outlier <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span> <span class="fu">select</span>(SampleID, Panel, IQR, sample_median, Outlier)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 x 5</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   SampleID Panel          IQR sample_median Outlier</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;    &lt;chr&gt;        &lt;dbl&gt;         &lt;dbl&gt;   &lt;dbl&gt;</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 A48      Inflammation  8.64          4.53       1</span></span></code></pre></div>
+</div>
+</div>
+<div id="plot-results-of-t-test-olink_volcano_plot" class="section level2">
+<h2>Plot results of t-test (olink_volcano_plot)</h2>
+<p>The olink_volcano_plot function generates a volcano plot using results from the olink_ttest function using the function <em>ggplot</em> and <em>geom_point</em> of the R library <em>ggplot2</em>. The estimated difference is shown in the x-axis and -log<sub>10</sub>(p-value) in the y-axis. A horizontal dotted line indicates p-value = 0.05. Dots are colored based on Benjamini-Hochberg adjusted p-value cutoff 0.05 and can optionally be annotated by OlinkID.</p>
+<div id="function-arguments-13" class="section level3">
+<h3>Function arguments</h3>
+<ul>
+<li>p.val_tbl: a data frame of results generated by <em>olink_ttest</em>.</li>
+<li>x_lab: Optional. Character value to use as the x-axis label.</li>
+<li>olinkid_list: Optional. Character vector of proteins (OlinkID) to label in the plot. If not provided, by default the function will label all significant proteins.</li>
+</ul>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># perform t-test</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>ttest_results <span class="ot">&lt;-</span> <span class="fu">olink_ttest</span>(<span class="at">df =</span> npx_data1,</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>                             <span class="at">variable =</span> <span class="st">&#39;Treatment&#39;</span>)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co"># select names of proteins to show</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>top_10_name <span class="ot">&lt;-</span> ttest_results <span class="sc">%&gt;%</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">10</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(OlinkID)</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="co"># volcano plot</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="fu">olink_volcano_plot</span>(<span class="at">p.val_tbl =</span> ttest_results,</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>                   <span class="at">x_lab =</span> <span class="st">&#39;Treatment&#39;</span>,</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>                   <span class="at">olinkid_list =</span> top_10_name)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+</div>
+<div id="function-output-13" class="section level3">
+<h3>Function output</h3>
+<p>An object of class <em>ggplot</em>.</p>
+</div>
+</div>
+<div id="theming-function-set_plot_theme" class="section level2">
+<h2>Theming function (set_plot_theme)</h2>
+<p>This function sets a coherent plot theme for plots by adding it to a ggplot object. It is mainly used for aesthetic reasons.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>npx_data1 <span class="sc">%&gt;%</span> </span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(OlinkID <span class="sc">==</span> <span class="st">&#39;OID01216&#39;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Treatment, <span class="at">y =</span> NPX, <span class="at">fill =</span> Treatment)) <span class="sc">+</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_plot_theme</span>()</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+</div>
+<div id="color-theming-olink_color_discrete-olink_color_gradient-olink_fill_discrete-olink_fill_gradient" class="section level2">
+<h2>Color theming (olink_color_discrete, olink_color_gradient, olink_fill_discrete, olink_fill_gradient)</h2>
+<p>These functions sets a coherent coloring theme for the plots by adding it to a ggplot object. It is mainly used for aesthetic reasons.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>npx_data1 <span class="sc">%&gt;%</span> </span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(OlinkID <span class="sc">==</span> <span class="st">&#39;OID01216&#39;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Treatment, <span class="at">y =</span> NPX, <span class="at">fill =</span> Treatment)) <span class="sc">+</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_plot_theme</span>() <span class="sc">+</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">olink_fill_discrete</span>()</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
