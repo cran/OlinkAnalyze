@@ -5,10 +5,7 @@ comment = "#>")
 options(tibble.print_min = 4L, tibble.print_max = 4L)
 
 ## ---- eval=FALSE--------------------------------------------------------------
-#  install.packages("remotes")
-
-## ---- eval=FALSE--------------------------------------------------------------
-#  remotes::install_github(repo ='Olink-Proteomics/OlinkRPackage/OlinkAnalyze', ref = "main", build_vignettes = TRUE)
+#  install.packages("OlinkAnalyze")
 
 ## ----message=FALSE, warning=FALSE---------------------------------------------
 # Load OlinkAnalyze
@@ -46,10 +43,35 @@ library(stringr)
 #                      df1_project_nr = '20200001',
 #                      df2_project_nr = '20200002',
 #                      reference_project = '20200001')
+#  
+#  # Example of using all samples for normalization
+#  subset_df1 <- npx_data1 %>%
+#    filter(QC_Warning == 'Pass') %>%
+#    filter(!str_detect(SampleID, 'CONTROL_SAMPLE')) %>%
+#    pull(SampleID) %>%
+#    unique()
+#  
+#  subset_df2 <- npx_data2 %>%
+#    filter(QC_Warning == 'Pass') %>%
+#    filter(!str_detect(SampleID, 'CONTROL_SAMPLE')) %>%
+#    pull(SampleID) %>%
+#    unique()
+#  
+#  olink_normalization(df1 = npx_data1,
+#                      df2 = npx_data2,
+#                      overlapping_samples_df1 = subset_df1,
+#                      overlapping_samples_df2 = subset_df2,
+#                      df1_project_nr = '20200001',
+#                      df2_project_nr = '20200002',
+#                      reference_project = '20200001')
 
 ## ----message=FALSE, eval=FALSE------------------------------------------------
 #  olink_ttest(df = npx_data1,
 #              variable = 'Treatment')
+
+## ----message=FALSE, eval=FALSE------------------------------------------------
+#  olink_wilcox(df = npx_data1,
+#               variable = 'Treatment')
 
 ## ----message=FALSE, eval=FALSE------------------------------------------------
 #  # One-way ANOVA, no covariates
@@ -77,6 +99,56 @@ library(stringr)
 #                                                      effect = 'Site')
 
 ## ----message=FALSE, eval=FALSE------------------------------------------------
+#  # One-way Kruskal-Wallis Test
+#  kruskal_results <- olink_one_non_parametric(df = npx_df,
+#                                              variable = "Time")
+#  # One-way Friedman Test
+#  friedman_results <- olink_one_non_parametric(df = npx_df,
+#                                               variable = "Time",
+#                                               dependence = TRUE)
+
+## ----message=FALSE, eval=FALSE------------------------------------------------
+#  #Friedman Test
+#  Friedman_results <- olink_one_non_parametric(npx_df, "Time", dependence = TRUE)
+#  
+#  #Filtering out significant and relevant results.
+#  significant_assays <- Friedman_results %>%
+#    filter(Threshold == 'Significant') %>%
+#    dplyr::select(OlinkID) %>%
+#    distinct() %>%
+#    pull()
+#  
+#  #Posthoc test for the results from Friedman Test
+#  friedman_posthoc_results <- olink_one_non_parametric_posthoc(npx_df, variable = c("Time"), olinkid_list = significant_assays)
+
+## ----message=FALSE, eval=FALSE------------------------------------------------
+#  # Two-way ordinal regression, no covariates
+#  ordinalRegression_results_twoway <- olink_ordinalRegression(df = npx_data1,
+#                                                              variable = c('Site', 'Time'))
+#  # One-way ordinal regression, Treatment as covariates
+#  ordinalRegression_oneway <- olink_anova(df = npx_data1,
+#                                          variable = 'Site',
+#                                          covariates = 'Treatment')
+
+## ----message=FALSE, eval=FALSE------------------------------------------------
+#  # Two-way Ordinal Regression
+#  ordinalRegression_results <- olink_ordinalRegression(df = npx_data1,
+#                               variable="Treatment:Time")
+#  # extracting the significant proteins
+#  significant_assays <- ordinalRegression_results %>%
+#    filter(Threshold == 'Significant' & term == 'Treatment:Time') %>%
+#    select(OlinkID) %>%
+#    distinct() %>%
+#    pull()
+#  # Posthoc test for the model NPX~Treatment*Time,
+#  ordinalRegression_posthoc_results <- olink_ordinalRegression_posthoc(npx_data1,
+#                                                                       variable=c("Treatment:Time"),
+#                                                                       covariates="Site",
+#                                                                       olinkid_list = significant_assays,
+#                                                                       effect = "Treatment:Time")
+#  
+
+## ----message=FALSE, eval=FALSE------------------------------------------------
 #  # Linear mixed model with one variable.
 #  lmer_results_oneway <- olink_lmer(df = npx_data1,
 #                                    variable = 'Site',
@@ -102,13 +174,42 @@ library(stringr)
 #                                                    random = 'Subject',
 #                                                    effect = 'Treatment')
 
+## ----message=FALSE------------------------------------------------------------
+npx_df <- npx_data1 %>% filter(!grepl("control", SampleID, ignore.case = TRUE))
+ttest_results <- olink_ttest(
+  df = npx_df,
+  variable = "Treatment",
+  alternative = "two.sided")
+
+try({ # This expression might fail if dependencies are not installed
+gsea_results <- olink_pathway_enrichment(data = npx_data1, test_results = ttest_results)
+ora_results <- olink_pathway_enrichment(
+  data = npx_data1,
+  test_results = ttest_results, method = "ORA")
+}, silent = TRUE)
+
 ## ----message=FALSE, fig.width=8, fig.height=4---------------------------------
 plot <- npx_data1 %>%
   na.omit() %>% # removing missing values which exists for Site
   olink_boxplot(variable = "Site", 
-                olinkid_list = c("OID01216", "OID01217"),
+                olinkid_list = c("OID00488", "OID01276"),
                 number_of_proteins_per_plot  = 2)
 plot[[1]]
+
+anova_posthoc_results<-npx_data1 %>% 
+  olink_anova_posthoc(olinkid_list = c("OID00488", "OID01276"),
+                      variable = 'Site',
+                      effect = 'Site')
+
+plot2 <- npx_data1 %>%
+  na.omit() %>% # removing missing values which exists for Site
+  olink_boxplot(variable = "Site", 
+                olinkid_list = c("OID00488", "OID01276"),
+                number_of_proteins_per_plot  = 2,
+                posthoc_results = anova_posthoc_results)
+
+plot2[[1]]
+
 
 ## ----message=FALSE, fig.width=8, fig.height=4---------------------------------
 npx_data1 %>% 
@@ -142,6 +243,19 @@ lapply(g, function(x){x$data}) %>%
   select(SampleID, Outlier, Panel)
 
 ## ----message=FALSE, fig.width=8, fig.height=4---------------------------------
+# GSEA Heatmap from t-test results
+try({ # This expression might fail if dependencies are not installed
+olink_pathway_heatmap(enrich_results = gsea_results, test_results = ttest_results)
+})
+
+## ----message = FALSE, fig.width=8, fig.height=4-------------------------------
+# ORA Heatmap from t-test results with cell keyword
+try({ # This expression might fail if dependencies are not installed
+olink_pathway_heatmap(enrich_results = ora_results, test_results = ttest_results,
+                      method = "ORA", keyword = "cell")
+})
+
+## ----message=FALSE, fig.width=8, fig.height=4---------------------------------
 npx_data1 %>% 
   filter(!str_detect(SampleID, 'CONTROL_SAMPLE'),
          Panel == 'Olink Inflammation') %>% 
@@ -150,6 +264,23 @@ npx_data1 %>%
 ## ----message = FALSE----------------------------------------------------------
 qc <- olink_qc_plot(npx_data1, color_g = "QC_Warning", IQR_outlierDef = 3, median_outlierDef = 3)
 qc$data %>% filter(Outlier == 1) %>% select(SampleID, Panel, IQR, sample_median, Outlier)
+
+## ----message=FALSE, fig.width=8, fig.height=4---------------------------------
+first10 <- npx_data1 %>%
+  pull(OlinkID) %>% 
+  unique() %>% 
+  head(10)
+
+first15samples <- npx_data1$SampleID %>% 
+  unique() %>% 
+  head(15)
+
+npx_data_small <- npx_data1 %>% 
+  filter(!str_detect(SampleID, 'CONT')) %>% 
+  filter(OlinkID %in% first10) %>% 
+  filter(SampleID %in% first15samples)
+
+olink_heatmap_plot(npx_data_small, variable_row_list =  'Treatment')
 
 ## ----message=FALSE, fig.width=8, fig.height=4---------------------------------
 # perform t-test
