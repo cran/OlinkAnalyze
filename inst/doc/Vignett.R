@@ -105,11 +105,15 @@ library(stringr)
 #  # One-way Friedman Test
 #  friedman_results <- olink_one_non_parametric(df = npx_df,
 #                                               variable = "Time",
+#                                               subject = "Subject",
 #                                               dependence = TRUE)
 
 ## ----message=FALSE, eval=FALSE------------------------------------------------
 #  #Friedman Test
-#  Friedman_results <- olink_one_non_parametric(npx_df, "Time", dependence = TRUE)
+#  Friedman_results <- olink_one_non_parametric(df = npx_data1,
+#                                               variable = "Time",
+#                                               subject = "Subject",
+#                                               dependence = TRUE)
 #  
 #  #Filtering out significant and relevant results.
 #  significant_assays <- Friedman_results %>%
@@ -119,14 +123,17 @@ library(stringr)
 #    pull()
 #  
 #  #Posthoc test for the results from Friedman Test
-#  friedman_posthoc_results <- olink_one_non_parametric_posthoc(npx_df, variable = c("Time"), olinkid_list = significant_assays)
+#  friedman_posthoc_results <- olink_one_non_parametric_posthoc(npx_data1,
+#                                                               variable = "Time",
+#                                                               test = "friedman",
+#                                                               olinkid_list = significant_assays)
 
 ## ----message=FALSE, eval=FALSE------------------------------------------------
 #  # Two-way ordinal regression, no covariates
 #  ordinalRegression_results_twoway <- olink_ordinalRegression(df = npx_data1,
 #                                                              variable = c('Site', 'Time'))
 #  # One-way ordinal regression, Treatment as covariates
-#  ordinalRegression_oneway <- olink_anova(df = npx_data1,
+#  ordinalRegression_oneway <- olink_ordinalRegression(df = npx_data1,
 #                                          variable = 'Site',
 #                                          covariates = 'Treatment')
 
@@ -189,6 +196,28 @@ ora_results <- olink_pathway_enrichment(
 }, silent = TRUE)
 
 ## ----message=FALSE, fig.width=8, fig.height=4---------------------------------
+npx_data1 %>% 
+  filter(!str_detect(SampleID, 'CONTROL_SAMPLE')) %>% 
+  olink_pca_plot(df = .,
+                 color_g = "QC_Warning", byPanel = TRUE)  
+
+## ----message = FALSE----------------------------------------------------------
+npx_data <- npx_data1 %>%
+    mutate(SampleID = paste(SampleID, "_", Index, sep = ""))
+g <- olink_pca_plot(df=npx_data, color_g = "QC_Warning",
+                    outlierDefX = 2.5, outlierDefY = 4, byPanel = TRUE, quiet = TRUE)
+lapply(g, function(x){x$data}) %>%
+  bind_rows() %>%
+  filter(Outlier == 1) %>% 
+  select(SampleID, Outlier, Panel)
+
+## ----message=FALSE, fig.width=8, fig.height=4---------------------------------
+npx_data1 %>% 
+  filter(!str_detect(SampleID, 'CONTROL_SAMPLE')) %>% 
+  olink_umap_plot(df = .,
+                 color_g = "QC_Warning", byPanel = TRUE)  
+
+## ----message=FALSE, fig.width=8, fig.height=4---------------------------------
 plot <- npx_data1 %>%
   na.omit() %>% # removing missing values which exists for Site
   olink_boxplot(variable = "Site", 
@@ -225,22 +254,6 @@ plot <- olink_lmer_plot(df = npx_data1,
                         col_variable = 'Treatment',
                         random = 'Subject')
 plot[[1]]
-
-## ----message=FALSE, fig.width=8, fig.height=4---------------------------------
-npx_data1 %>% 
-  filter(!str_detect(SampleID, 'CONTROL_SAMPLE')) %>% 
-  olink_pca_plot(df = .,
-                 color_g = "QC_Warning", byPanel = TRUE)  
-
-## ----message = FALSE----------------------------------------------------------
-npx_data <- npx_data1 %>%
-    mutate(SampleID = paste(SampleID, "_", Index, sep = ""))
-g <- olink_pca_plot(df=npx_data, color_g = "QC_Warning",
-                    outlierDefX = 2.5, outlierDefY = 4, byPanel = TRUE, quiet = TRUE)
-lapply(g, function(x){x$data}) %>%
-  bind_rows() %>%
-  filter(Outlier == 1) %>% 
-  select(SampleID, Outlier, Panel)
 
 ## ----message=FALSE, fig.width=8, fig.height=4---------------------------------
 # GSEA Heatmap from t-test results
