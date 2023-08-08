@@ -1,6 +1,6 @@
 ## ----Outlier_data, include=FALSE----------------------------------------------
 library(OlinkAnalyze)
-knitr::opts_chunk$set(fig.height=5,fig.width=6)
+knitr::opts_chunk$set(fig.height=3,fig.width=6)
 knitr::opts_chunk$set(warning = F)
 knitr::opts_chunk$set(message = F)
 knitr::opts_chunk$set(fig.pos = 'H')

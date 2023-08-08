@@ -1,48 +1,88 @@
+## ---- echo=FALSE,message=FALSE, eval=FALSE------------------------------------
+#  library(OlinkAnalyze)
+
 ## ---- echo=FALSE,message=FALSE------------------------------------------------
-library(OlinkAnalyze)
 library(dplyr)
 library(ggplot2)
 
 ## ----setup, include=FALSE-----------------------------------------------------
-knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+knitr::opts_chunk$set(warning = FALSE,
+                      fig.height=3,
+                      fig.width=6,
+                      message = FALSE) 
 
 ## ----Outlier_data, include=FALSE----------------------------------------------
 library(OlinkAnalyze)
 data(manifest)
 
 ## ----manifest, echo = F, message=FALSE----------------------------------------
- manifest |> head(10)  %>% 
+ manifest %>% head(10)  %>% 
   knitr::kable(format = "html",
                booktabs = T,
                linesep = "",
                digits = 4,
                longtable = T,
                row.names = F,
-               caption = " Sample manifest.",
+               caption = "Table 1. Example of Sample manifest",
                label = "manifest")
 
 ## ----complete_randomization, message=FALSE, warning=FALSE,results='hide'------
-randomized.manifest_a <- olink_plate_randomizer(manifest, seed=123456)
+randomized.manifest <- olink_plate_randomizer(manifest, seed=123456)
 
 ## ----subjects_randomization, message=FALSE,results='hide'---------------------
-randomized.manifest_b <- olink_plate_randomizer(manifest,SubjectColumn="SubjectID", 
+randomized.manifest <- olink_plate_randomizer(manifest,
+                                                SubjectColumn="SubjectID", 
                                                 available.spots=c(48,48,42), 
                                                 iterations = 500,
                                                 seed=123456)
 
-## ---- fig.height = 8, fig.width = 8, fig.align = "center"---------------------
-olink_displayPlateLayout(randomized.manifest_b, fill.color = 'SubjectID', include.label = FALSE)
+## ----randomize_controls, message = FALSE, eval = FALSE------------------------
+#  randomized_manifest <- olink_plate_randomizer(manifest,
+#                                                Product = "Explore HT",
+#                                                SubjectColumn = "SampleID",
+#                                                num_ctrl = 10,
+#                                                rand_ctrl = TRUE)
 
-## ----fig.height = 8, fig.width = 8, fig.align = "center"----------------------
-olink_displayPlateLayout(randomized.manifest_b, fill.color = 'SubjectID', include.label = TRUE)
+## ---- rand_ctrl_code, echo=FALSE, results='hide', message=FALSE, warning=FALSE----
+randomized_manifest <- olink_plate_randomizer(manifest, 
+                                              Product = "Explore HT",
+                                              SubjectColumn = "SampleID",
+                                              num_ctrl = 10, 
+                                              rand_ctrl = TRUE)
 
-## ----fig.height = 8, fig.width = 8, fig.align = "center"----------------------
-olink_displayPlateDistributions(randomized.manifest_b, fill.color = 'SubjectID')
+## ----randomized_controls_table, echo=FALSE, message=FALSE, warning=FALSE------
+randomized_manifest %>% 
+  head(10)  %>% 
+  knitr::kable(format = "html",
+               booktabs = T,
+               linesep = "",
+               digits = 4,
+               longtable = T,
+               row.names = F,
+               caption = "Table 2. Example of Randomized Sample manifest",
+               label = "manifest")
 
-## ----fig.height = 8, fig.width = 8, fig.align = "center"----------------------
-olink_displayPlateDistributions(randomized.manifest_b, fill.color = 'Site')
+
+## ----figure_captions, message=FALSE, echo=FALSE-------------------------------
+fcap1 <- "Figure 1. Randomized samples in 96 well plate format, colored by Subject ID."
+fcap2 <- "Figure 2. Randomized samples in 96 well plate format with labeled wells."
+fcap3 <- "Figure 3. Distribution of Subject ID across randomized plates."
+fcap4 <- "Figure 4. Distribution of Site across randomized plates."
+
+
+## ---- fig.height = 6, fig.width = 7.5, fig.align = "center", fig.cap= fcap1----
+olink_displayPlateLayout(randomized.manifest, fill.color = 'SubjectID', include.label = FALSE)
+
+## ---- fig.height = 6, fig.width = 7.5, fig.align = "center", fig.cap= fcap2----
+olink_displayPlateLayout(randomized.manifest, fill.color = 'SubjectID', include.label = TRUE)
+
+## ---- fig.align = "center", fig.cap=fcap3-------------------------------------
+olink_displayPlateDistributions(randomized.manifest, fill.color = 'SubjectID')
+
+## ---- fig.align = "center", fig.cap= fcap4------------------------------------
+olink_displayPlateDistributions(randomized.manifest, fill.color = 'Site')
 
 ## ---- eval = FALSE------------------------------------------------------------
 #  library(writexl)
-#  write_xlsx(randomized.manifest_b,"randomized.manifest_b.xlsx")
+#  write_xlsx(randomized.manifest,"randomized.manifest.xlsx")
 

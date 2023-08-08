@@ -1,7 +1,10 @@
 ## ----setup, include = FALSE---------------------------------------------------
 knitr::opts_chunk$set(
-collapse = TRUE,
-comment = "#>")
+  fig.width = 6,
+  fig.height = 3,
+  fig.align = "center",
+  collapse = TRUE,
+  comment = "#>")
 options(tibble.print_min = 4L, tibble.print_max = 4L)
 
 ## ---- eval=FALSE--------------------------------------------------------------
@@ -195,7 +198,7 @@ ora_results <- olink_pathway_enrichment(
   test_results = ttest_results, method = "ORA")
 }, silent = TRUE)
 
-## ----message=FALSE, fig.width=8, fig.height=4---------------------------------
+## ----message=FALSE------------------------------------------------------------
 npx_data1 %>% 
   filter(!str_detect(SampleID, 'CONTROL_SAMPLE')) %>% 
   olink_pca_plot(df = .,
@@ -211,13 +214,13 @@ lapply(g, function(x){x$data}) %>%
   filter(Outlier == 1) %>% 
   select(SampleID, Outlier, Panel)
 
-## ----message=FALSE, fig.width=8, fig.height=4---------------------------------
+## ----message=FALSE------------------------------------------------------------
 npx_data1 %>% 
   filter(!str_detect(SampleID, 'CONTROL_SAMPLE')) %>% 
   olink_umap_plot(df = .,
                  color_g = "QC_Warning", byPanel = TRUE)  
 
-## ----message=FALSE, fig.width=8, fig.height=4---------------------------------
+## ----message=FALSE------------------------------------------------------------
 plot <- npx_data1 %>%
   na.omit() %>% # removing missing values which exists for Site
   olink_boxplot(variable = "Site", 
@@ -240,13 +243,13 @@ plot2 <- npx_data1 %>%
 plot2[[1]]
 
 
-## ----message=FALSE, fig.width=8, fig.height=4---------------------------------
+## ----message=FALSE------------------------------------------------------------
 npx_data1 %>% 
   filter(Panel == 'Olink Cardiometabolic') %>% # For this example only plotting one panel.
   olink_dist_plot() +
   theme(axis.text.x = element_blank()) # Due to the number of samples one can remove the text or rotate it
 
-## ----message=FALSE, fig.width=8, fig.height=4---------------------------------
+## ----message=FALSE, fig.width= 8----------------------------------------------
 plot <- olink_lmer_plot(df = npx_data1, 
                         olinkid_list = c("OID01216", "OID01217"), 
                         variable = c('Site', 'Treatment'), 
@@ -255,20 +258,20 @@ plot <- olink_lmer_plot(df = npx_data1,
                         random = 'Subject')
 plot[[1]]
 
-## ----message=FALSE, fig.width=8, fig.height=4---------------------------------
+## ----message=FALSE, fig.height=4, fig.width=8---------------------------------
 # GSEA Heatmap from t-test results
 try({ # This expression might fail if dependencies are not installed
 olink_pathway_heatmap(enrich_results = gsea_results, test_results = ttest_results)
 })
 
-## ----message = FALSE, fig.width=8, fig.height=4-------------------------------
+## ----message = FALSE, fig.height=4, fig.width=8-------------------------------
 # ORA Heatmap from t-test results with cell keyword
 try({ # This expression might fail if dependencies are not installed
 olink_pathway_heatmap(enrich_results = ora_results, test_results = ttest_results,
                       method = "ORA", keyword = "cell")
 })
 
-## ----message=FALSE, fig.width=8, fig.height=4---------------------------------
+## ----message=FALSE------------------------------------------------------------
 npx_data1 %>% 
   filter(!str_detect(SampleID, 'CONTROL_SAMPLE'),
          Panel == 'Olink Inflammation') %>% 
@@ -278,7 +281,7 @@ npx_data1 %>%
 qc <- olink_qc_plot(npx_data1, color_g = "QC_Warning", IQR_outlierDef = 3, median_outlierDef = 3)
 qc$data %>% filter(Outlier == 1) %>% select(SampleID, Panel, IQR, sample_median, Outlier)
 
-## ----message=FALSE, fig.width=8, fig.height=4---------------------------------
+## ----message=FALSE, fig.height=4----------------------------------------------
 first10 <- npx_data1 %>%
   pull(OlinkID) %>% 
   unique() %>% 
@@ -295,7 +298,7 @@ npx_data_small <- npx_data1 %>%
 
 olink_heatmap_plot(npx_data_small, variable_row_list =  'Treatment')
 
-## ----message=FALSE, fig.width=8, fig.height=4---------------------------------
+## ----message=FALSE------------------------------------------------------------
 # perform t-test
 ttest_results <- olink_ttest(df = npx_data1,
                              variable = 'Treatment')
@@ -308,14 +311,14 @@ olink_volcano_plot(p.val_tbl = ttest_results,
                    x_lab = 'Treatment',
                    olinkid_list = top_10_name)
 
-## ----message=FALSE, fig.width=8, fig.height=4---------------------------------
+## ----message=FALSE------------------------------------------------------------
 npx_data1 %>% 
   filter(OlinkID == 'OID01216') %>% 
   ggplot(aes(x = Treatment, y = NPX, fill = Treatment)) +
   geom_boxplot() +
   set_plot_theme()
 
-## ----message=FALSE, fig.width=8, fig.height=4---------------------------------
+## ----message=FALSE------------------------------------------------------------
 npx_data1 %>% 
   filter(OlinkID == 'OID01216') %>% 
   ggplot(aes(x = Treatment, y = NPX, fill = Treatment)) +
