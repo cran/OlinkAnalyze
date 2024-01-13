@@ -1,4 +1,4 @@
-## ---- include = FALSE---------------------------------------------------------
+## ----include = FALSE----------------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -12,7 +12,7 @@ knitr::opts_chunk$set(
   fig.align = "center"
 )
 
-## ---- echo=FALSE--------------------------------------------------------------
+## ----echo=FALSE---------------------------------------------------------------
 library(OlinkAnalyze)
 library(dplyr)
 library(stringr)
@@ -79,11 +79,11 @@ npx_data1 %>%
 #  data1 <- read_NPX("~/NPX_file1_location.xlsx")
 #  data2 <- read_NPX("~/NPX_file2_location.xlsx")
 
-## ---- eval= FALSE-------------------------------------------------------------
+## ----eval= FALSE--------------------------------------------------------------
 #  data.frame(SampleID = intersect(npx_data1$SampleID, npx_data2$SampleID)) %>%
 #    dplyr::filter(!stringr::str_detect(SampleID, "CONTROL_SAMPLE"))
 
-## ---- echo=FALSE--------------------------------------------------------------
+## ----echo=FALSE---------------------------------------------------------------
 
 data.frame(SampleID = intersect(npx_data1$SampleID, npx_data2$SampleID)) %>%
   dplyr::filter(!stringr::str_detect(SampleID, "CONTROL_SAMPLE")) %>% #Remove control samples
@@ -291,7 +291,7 @@ OlinkAnalyze::olink_pca_plot(df          = npx_after_br,
                              color_g     = "Type",
                              byPanel     = TRUE)
 
-## ---- eval = FALSE------------------------------------------------------------
+## ----eval = FALSE-------------------------------------------------------------
 #  new_normalized_data <- npx_br_data %>%
 #    dplyr::filter(Project == "data2") %>%
 #    dplyr::select(-Project, -Adj_factor) %>%

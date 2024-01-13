@@ -12,7 +12,7 @@
 
 <meta name="author" content="Olink DS team" />
 
-<meta name="date" content="2023-11-03" />
+<meta name="date" content="2024-01-11" />
 
 <title>Plate Randomization Vignette</title>
 
@@ -340,7 +340,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Plate Randomization Vignette</h1>
 <h4 class="author">Olink DS team</h4>
-<h4 class="date">2023-11-03</h4>
+<h4 class="date">2024-01-11</h4>
 
 
 <div id="TOC">
@@ -572,13 +572,18 @@ studies), Olink recommends keeping each subject on the same plate to
 further reduce variation in the data. The individuals should then be
 distributed so that the remaining experimental variables of interest are
 evenly distributed across plates. This could be achieved by using the
-<code>SubjectColumn</code> argument. However, if there are to many
-samples per subject (&gt;8), complete randomization is recommended. The
-number of samples on each plate could be specified via the
-<code>available.spots</code> argument. For example, the following code
-will lead to 78 samples on the first plate, and 30 samples on the second
-and the third plates. The number of iterations for fitting subjects on
-the same plate can be set by the <code>iterations</code> argument.</p>
+<code>SubjectColumn</code> argument. The <code>SubjectColumn</code>
+argument must correspond to a column within the manifest and cannot be
+SampleID. If <code>SubjectColumn</code> is specified, every SampleID
+must have a value in the subject column, even if there is only 1 sample
+for that subject.</p>
+<p>However, if there are to many samples per subject (&gt;8), complete
+randomization is recommended. The number of samples on each plate could
+be specified via the <code>available.spots</code> argument. For example,
+the following code will lead to 78 samples on the first plate, and 30
+samples on the second and the third plates. The number of iterations for
+fitting subjects on the same plate can be set by the
+<code>iterations</code> argument.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>randomized.manifest <span class="ot">&lt;-</span> <span class="fu">olink_plate_randomizer</span>(manifest,</span>
 <span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>                                                <span class="at">SubjectColumn=</span><span class="st">&quot;SubjectID&quot;</span>, </span>
 <span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>                                                <span class="at">available.spots=</span><span class="fu">c</span>(<span class="dv">48</span>,<span class="dv">48</span>,<span class="dv">42</span>), </span>

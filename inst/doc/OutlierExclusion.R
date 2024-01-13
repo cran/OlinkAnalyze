@@ -18,6 +18,18 @@ group_data <- npx_data1 |>
 
  
 
+## ----dataset_generation, eval = FALSE, message=FALSE, warning=FALSE-----------
+#  # Create Datasets with outliers
+#  outlier_data <- npx_data1 |>
+#    dplyr::mutate(NPX = ifelse(SampleID == "A25", NPX + 4, NPX)) |>
+#    dplyr::mutate(NPX = ifelse(SampleID == "A52", NPX - 4, NPX)) |>
+#    dplyr::filter(!stringr::str_detect(SampleID, "CONTROL"))
+#  
+#  group_data <- npx_data1 |>
+#    dplyr::mutate(NPX = ifelse(Site == "Site_D", NPX + 3, NPX)) |>
+#    dplyr::filter(!stringr::str_detect(SampleID, "CONTROL"))
+#  
+
 ## ----Outlier_Example, fig.cap=fcap--------------------------------------------
 p1<- outlier_data |> olink_pca_plot(label_samples = T, quiet = T)
 p2<- group_data |> olink_pca_plot(color_g = "Site", quiet = T)

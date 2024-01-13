@@ -1,7 +1,7 @@
-## ---- echo=FALSE,message=FALSE, eval=FALSE------------------------------------
+## ----echo=FALSE,message=FALSE, eval=FALSE-------------------------------------
 #  library(OlinkAnalyze)
 
-## ---- echo=FALSE,message=FALSE------------------------------------------------
+## ----echo=FALSE,message=FALSE-------------------------------------------------
 library(dplyr)
 library(ggplot2)
 
@@ -43,7 +43,7 @@ randomized.manifest <- olink_plate_randomizer(manifest,
 #                                                num_ctrl = 10,
 #                                                rand_ctrl = TRUE)
 
-## ---- rand_ctrl_code, echo=FALSE, results='hide', message=FALSE, warning=FALSE----
+## ----rand_ctrl_code, echo=FALSE, results='hide', message=FALSE, warning=FALSE----
 randomized_manifest <- olink_plate_randomizer(manifest, 
                                               Product = "Explore HT",
                                               SubjectColumn = "SampleID",
@@ -70,19 +70,19 @@ fcap3 <- "Figure 3. Distribution of Subject ID across randomized plates."
 fcap4 <- "Figure 4. Distribution of Site across randomized plates."
 
 
-## ---- fig.height = 6, fig.width = 7.5, fig.align = "center", fig.cap= fcap1----
+## ----fig.height = 6, fig.width = 7.5, fig.align = "center", fig.cap= fcap1----
 olink_displayPlateLayout(randomized.manifest, fill.color = 'SubjectID', include.label = FALSE)
 
-## ---- fig.height = 6, fig.width = 7.5, fig.align = "center", fig.cap= fcap2----
+## ----fig.height = 6, fig.width = 7.5, fig.align = "center", fig.cap= fcap2----
 olink_displayPlateLayout(randomized.manifest, fill.color = 'SubjectID', include.label = TRUE)
 
-## ---- fig.align = "center", fig.cap=fcap3-------------------------------------
+## ----fig.align = "center", fig.cap=fcap3--------------------------------------
 olink_displayPlateDistributions(randomized.manifest, fill.color = 'SubjectID')
 
-## ---- fig.align = "center", fig.cap= fcap4------------------------------------
+## ----fig.align = "center", fig.cap= fcap4-------------------------------------
 olink_displayPlateDistributions(randomized.manifest, fill.color = 'Site')
 
-## ---- eval = FALSE------------------------------------------------------------
+## ----eval = FALSE-------------------------------------------------------------
 #  library(writexl)
 #  write_xlsx(randomized.manifest,"randomized.manifest.xlsx")
 

@@ -1,7 +1,7 @@
 Type: Package
 Package: OlinkAnalyze
 Title: Facilitate Analysis of Proteomic Data from Olink
-Version: 3.6.0
+Version: 3.6.2
 Authors@R: c(
     person("Kathleen", "Nevola", , "biostattools@olink.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-5183-6444", Github = "kathy-nevola")),
@@ -68,7 +68,7 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.2.3
 NeedsCompilation: no
-Packaged: 2023-11-03 17:59:28 UTC; kathy.nevola
+Packaged: 2024-01-11 21:25:20 UTC; kathy.nevola
 Author: Kathleen Nevola [aut, cre] (<https://orcid.org/0000-0002-5183-6444>,
     kathy-nevola),
   Marianne Sandin [aut] (<https://orcid.org/0000-0001-6186-963X>,
@@ -96,4 +96,4 @@ Author: Kathleen Nevola [aut, cre] (<https://orcid.org/0000-0002-5183-6444>,
   Olink [cph, fnd]
 Maintainer: Kathleen Nevola <biostattools@olink.com>
 Repository: CRAN
-Date/Publication: 2023-11-03 20:00:03 UTC
+Date/Publication: 2024-01-13 13:00:13 UTC

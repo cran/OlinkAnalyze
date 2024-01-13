@@ -7,7 +7,7 @@ knitr::opts_chunk$set(
   comment = "#>")
 options(tibble.print_min = 4L, tibble.print_max = 4L)
 
-## ---- eval=FALSE--------------------------------------------------------------
+## ----eval=FALSE---------------------------------------------------------------
 #  install.packages("OlinkAnalyze")
 
 ## ----message=FALSE, warning=FALSE---------------------------------------------
@@ -24,7 +24,7 @@ library(stringr)
 
 ## ----message=FALSE, eval=FALSE------------------------------------------------
 #  olink_plate_randomizer(manifest,
-#                         SubjectColumn ="SampleID",
+#                         SubjectColumn ="SubjectID",
 #                         seed=111)
 
 ## ----message=FALSE, eval=FALSE------------------------------------------------
@@ -49,13 +49,15 @@ library(stringr)
 #  
 #  # Example of using all samples for normalization
 #  subset_df1 <- npx_data1 %>%
-#    filter(QC_Warning == 'Pass') %>%
+#    group_by(SampleID) %>%
+#    filter(all(QC_Warning == 'Pass')) %>%
 #    filter(!str_detect(SampleID, 'CONTROL_SAMPLE')) %>%
 #    pull(SampleID) %>%
 #    unique()
 #  
 #  subset_df2 <- npx_data2 %>%
-#    filter(QC_Warning == 'Pass') %>%
+#    group_by(SampleID) %>%
+#    filter(all(QC_Warning == 'Pass')) %>%
 #    filter(!str_detect(SampleID, 'CONTROL_SAMPLE')) %>%
 #    pull(SampleID) %>%
 #    unique()
@@ -215,10 +217,18 @@ lapply(g, function(x){x$data}) %>%
   select(SampleID, Outlier, Panel)
 
 ## ----message=FALSE------------------------------------------------------------
+if (requireNamespace("umap", quietly = TRUE) ){
 npx_data1 %>% 
   filter(!str_detect(SampleID, 'CONTROL_SAMPLE')) %>% 
   olink_umap_plot(df = .,
                  color_g = "QC_Warning", byPanel = TRUE)  
+  }
+
+## ----message=FALSE, eval =FALSE-----------------------------------------------
+#  npx_data1 %>%
+#    filter(!str_detect(SampleID, 'CONTROL_SAMPLE')) %>%
+#    olink_umap_plot(df = .,
+#                   color_g = "QC_Warning", byPanel = TRUE)
 
 ## ----message=FALSE------------------------------------------------------------
 plot <- npx_data1 %>%
@@ -296,7 +306,9 @@ npx_data_small <- npx_data1 %>%
   filter(OlinkID %in% first10) %>% 
   filter(SampleID %in% first15samples)
 
-olink_heatmap_plot(npx_data_small, variable_row_list =  'Treatment')
+try({ #This statement might fail if dependencies are not installed
+  olink_heatmap_plot(npx_data_small, variable_row_list =  'Treatment')
+  })
 
 ## ----message=FALSE------------------------------------------------------------
 # perform t-test
