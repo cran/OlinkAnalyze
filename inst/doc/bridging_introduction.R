@@ -36,13 +36,17 @@ data.frame(Platform = c("Target 96",
 
 
 ## ----bridge_sample_selection_example, echo=T, eval=T--------------------------
-bridge_Samples<-olink_bridgeselector(df = npx_data1,
-                     sampleMissingFreq = 0.1,
+
+bridge_Samples<- npx_data1 %>% 
+  # Excluding control samples. Naming convention may differ.
+  dplyr::filter((stringr::str_detect(SampleID, "CONTROL", negate = TRUE))) %>%
+  olink_bridgeselector(sampleMissingFreq = 0.1,
                      n = 16)
 
 ## ----bridge_sample_selection, echo=FALSE--------------------------------------
-olink_bridgeselector(df = npx_data1,
-                     sampleMissingFreq = 0.1,
+npx_data1 %>% 
+  filter((stringr::str_detect(SampleID, "CONTROL", negate = TRUE))) %>%
+  olink_bridgeselector(sampleMissingFreq = 0.1,
                      n = 16) %>%
   kableExtra::kbl(booktabs = TRUE,
       digits = 2,

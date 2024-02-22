@@ -1,7 +1,7 @@
 Type: Package
 Package: OlinkAnalyze
 Title: Facilitate Analysis of Proteomic Data from Olink
-Version: 3.6.2
+Version: 3.7.0
 Authors@R: c(
     person("Kathleen", "Nevola", , "biostattools@olink.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-5183-6444", Github = "kathy-nevola")),
@@ -41,6 +41,8 @@ Authors@R: c(
            comment = c(Github = "olofmansson")),
     person("Ola", "Caster", role = "ctb",
            comment = c(Github = "OlaCaster")),
+    person("Kristyn", "Chin", role = "ctb",
+            comment = c(Github = "kristynchin-olink")),
     person("Olink", role = c("cph", "fnd"))
   )
 Description: A collection of functions to facilitate analysis of proteomic
@@ -53,6 +55,7 @@ Description: A collection of functions to facilitate analysis of proteomic
     package is to help users extract biological insights from proteomic
     data run on the Olink platform.
 License: AGPL (>= 3)
+Contact: biostattools@olink.com
 Depends: R (>= 4.1.0)
 Imports: broom, car, dplyr, emmeans, forcats, generics, ggplot2,
         ggpubr, ggrepel, grDevices, grid, lme4, lmerTest, magrittr,
@@ -67,8 +70,10 @@ Config/testthat/edition: 3
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.2.3
+URL: https://olink.com/
+        https://github.com/Olink-Proteomics/OlinkRPackage
 NeedsCompilation: no
-Packaged: 2024-01-11 21:25:20 UTC; kathy.nevola
+Packaged: 2024-02-21 19:38:00 UTC; kathy.nevola
 Author: Kathleen Nevola [aut, cre] (<https://orcid.org/0000-0002-5183-6444>,
     kathy-nevola),
   Marianne Sandin [aut] (<https://orcid.org/0000-0001-6186-963X>,
@@ -93,7 +98,8 @@ Author: Kathleen Nevola [aut, cre] (<https://orcid.org/0000-0002-5183-6444>,
   Jessica Barbagallo [ctb] (jbarbagallo),
   Olof Mansson [ctr] (olofmansson),
   Ola Caster [ctb] (OlaCaster),
+  Kristyn Chin [ctb] (kristynchin-olink),
   Olink [cph, fnd]
 Maintainer: Kathleen Nevola <biostattools@olink.com>
 Repository: CRAN
-Date/Publication: 2024-01-13 13:00:13 UTC
+Date/Publication: 2024-02-22 08:10:05 UTC
