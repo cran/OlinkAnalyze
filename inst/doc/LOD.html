@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Calculating LOD from Olink® Explore data</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+<script>$(document).ready(function(){
+    if (typeof $('[data-toggle="tooltip"]').tooltip === 'function') {
+        $('[data-toggle="tooltip"]').tooltip();
+    }
+    if ($('[data-toggle="popover"]').popover === 'function') {
+        $('[data-toggle="popover"]').popover();
+    }
+});
+</script>
+<style type="text/css">
+.lightable-minimal {
+border-collapse: separate;
+border-spacing: 16px 1px;
+width: 100%;
+margin-bottom: 10px;
+}
+.lightable-minimal td {
+margin-left: 5px;
+margin-right: 5px;
+}
+.lightable-minimal th {
+margin-left: 5px;
+margin-right: 5px;
+}
+.lightable-minimal thead tr:last-child th {
+border-bottom: 2px solid #00000050;
+empty-cells: hide;
+}
+.lightable-minimal tbody tr:first-child td {
+padding-top: 0.5em;
+}
+.lightable-minimal.lightable-hover tbody tr:hover {
+background-color: #f5f5f5;
+}
+.lightable-minimal.lightable-striped tbody tr:nth-child(even) {
+background-color: #f5f5f5;
+}
+.lightable-classic {
+border-top: 0.16em solid #111111;
+border-bottom: 0.16em solid #111111;
+width: 100%;
+margin-bottom: 10px;
+margin: 10px 5px;
+}
+.lightable-classic tfoot tr td {
+border: 0;
+}
+.lightable-classic tfoot tr:first-child td {
+border-top: 0.14em solid #111111;
+}
+.lightable-classic caption {
+color: #222222;
+}
+.lightable-classic td {
+padding-left: 5px;
+padding-right: 5px;
+color: #222222;
+}
+.lightable-classic th {
+padding-left: 5px;
+padding-right: 5px;
+font-weight: normal;
+color: #222222;
+}
+.lightable-classic thead tr:last-child th {
+border-bottom: 0.10em solid #111111;
+}
+.lightable-classic.lightable-hover tbody tr:hover {
+background-color: #F9EEC1;
+}
+.lightable-classic.lightable-striped tbody tr:nth-child(even) {
+background-color: #f5f5f5;
+}
+.lightable-classic-2 {
+border-top: 3px double #111111;
+border-bottom: 3px double #111111;
+width: 100%;
+margin-bottom: 10px;
+}
+.lightable-classic-2 tfoot tr td {
+border: 0;
+}
+.lightable-classic-2 tfoot tr:first-child td {
+border-top: 3px double #111111;
+}
+.lightable-classic-2 caption {
+color: #222222;
+}
+.lightable-classic-2 td {
+padding-left: 5px;
+padding-right: 5px;
+color: #222222;
+}
+.lightable-classic-2 th {
+padding-left: 5px;
+padding-right: 5px;
+font-weight: normal;
+color: #222222;
+}
+.lightable-classic-2 tbody tr:last-child td {
+border-bottom: 3px double #111111;
+}
+.lightable-classic-2 thead tr:last-child th {
+border-bottom: 1px solid #111111;
+}
+.lightable-classic-2.lightable-hover tbody tr:hover {
+background-color: #F9EEC1;
+}
+.lightable-classic-2.lightable-striped tbody tr:nth-child(even) {
+background-color: #f5f5f5;
+}
+.lightable-material {
+min-width: 100%;
+white-space: nowrap;
+table-layout: fixed;
+font-family: Roboto, sans-serif;
+border: 1px solid #EEE;
+border-collapse: collapse;
+margin-bottom: 10px;
+}
+.lightable-material tfoot tr td {
+border: 0;
+}
+.lightable-material tfoot tr:first-child td {
+border-top: 1px solid #EEE;
+}
+.lightable-material th {
+height: 56px;
+padding-left: 16px;
+padding-right: 16px;
+}
+.lightable-material td {
+height: 52px;
+padding-left: 16px;
+padding-right: 16px;
+border-top: 1px solid #eeeeee;
+}
+.lightable-material.lightable-hover tbody tr:hover {
+background-color: #f5f5f5;
+}
+.lightable-material.lightable-striped tbody tr:nth-child(even) {
+background-color: #f5f5f5;
+}
+.lightable-material.lightable-striped tbody td {
+border: 0;
+}
+.lightable-material.lightable-striped thead tr:last-child th {
+border-bottom: 1px solid #ddd;
+}
+.lightable-material-dark {
+min-width: 100%;
+white-space: nowrap;
+table-layout: fixed;
+font-family: Roboto, sans-serif;
+border: 1px solid #FFFFFF12;
+border-collapse: collapse;
+margin-bottom: 10px;
+background-color: #363640;
+}
+.lightable-material-dark tfoot tr td {
+border: 0;
+}
+.lightable-material-dark tfoot tr:first-child td {
+border-top: 1px solid #FFFFFF12;
+}
+.lightable-material-dark th {
+height: 56px;
+padding-left: 16px;
+padding-right: 16px;
+color: #FFFFFF60;
+}
+.lightable-material-dark td {
+height: 52px;
+padding-left: 16px;
+padding-right: 16px;
+color: #FFFFFF;
+border-top: 1px solid #FFFFFF12;
+}
+.lightable-material-dark.lightable-hover tbody tr:hover {
+background-color: #FFFFFF12;
+}
+.lightable-material-dark.lightable-striped tbody tr:nth-child(even) {
+background-color: #FFFFFF12;
+}
+.lightable-material-dark.lightable-striped tbody td {
+border: 0;
+}
+.lightable-material-dark.lightable-striped thead tr:last-child th {
+border-bottom: 1px solid #FFFFFF12;
+}
+.lightable-paper {
+width: 100%;
+margin-bottom: 10px;
+color: #444;
+}
+.lightable-paper tfoot tr td {
+border: 0;
+}
+.lightable-paper tfoot tr:first-child td {
+border-top: 1px solid #00000020;
+}
+.lightable-paper thead tr:last-child th {
+color: #666;
+vertical-align: bottom;
+border-bottom: 1px solid #00000020;
+line-height: 1.15em;
+padding: 10px 5px;
+}
+.lightable-paper td {
+vertical-align: middle;
+border-bottom: 1px solid #00000010;
+line-height: 1.15em;
+padding: 7px 5px;
+}
+.lightable-paper.lightable-hover tbody tr:hover {
+background-color: #F9EEC1;
+}
+.lightable-paper.lightable-striped tbody tr:nth-child(even) {
+background-color: #00000008;
+}
+.lightable-paper.lightable-striped tbody td {
+border: 0;
+}
+</style>
+<div><img src="data:image/png;base64,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" width="100px" align="right"></div>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Calculating LOD from Olink® Explore
+data</h1>
+<h4 class="date">Compiled: June 27, 2024</h4>
+
+
+<div id="TOC">
+<ul>
+<li><a href="#introduction" id="toc-introduction">Introduction</a></li>
+<li><a href="#integrating-lod" id="toc-integrating-lod">Integrating
+LOD</a></li>
+<li><a href="#import-olink-explore-datasets" id="toc-import-olink-explore-datasets">Import Olink Explore
+datasets</a></li>
+<li><a href="#integrating-negative-control-lod" id="toc-integrating-negative-control-lod">Integrating Negative Control
+LOD</a></li>
+<li><a href="#integrating-fixed-lod" id="toc-integrating-fixed-lod">Integrating Fixed LOD</a></li>
+<li><a href="#when-to-use-fixed-lod-vs-nc-lod" id="toc-when-to-use-fixed-lod-vs-nc-lod">When to use Fixed LOD vs NC
+LOD</a></li>
+<li><a href="#adjusting-lod-for-intensity-normalized-data" id="toc-adjusting-lod-for-intensity-normalized-data">Adjusting LOD for
+Intensity Normalized Data</a></li>
+<li><a href="#export-olink-explore-data-with-lod" id="toc-export-olink-explore-data-with-lod">Export Olink Explore Data
+with LOD</a></li>
+<li><a href="#contact-us" id="toc-contact-us">Contact Us</a></li>
+<li><a href="#legal-disclaimer" id="toc-legal-disclaimer">Legal
+Disclaimer</a></li>
+</ul>
+</div>
+
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>This tutorial describes how to use Olink® Analyze to integrate Limit
+of Detection (LOD) into Olink® Explore HT and Olink® Explore 384/3072
+datasets. Although it is recommended to use all Olink Explore data in
+downstream analyses, LOD information can be useful when performing
+technical evaluations of a dataset.</p>
+<p>In this tutorial, you will learn how to use <code>olink_lod()</code>
+to add LOD information to your Olink Explore dataset. Note that Olink
+Analyze does not contain example Olink Explore HT or Olink Explore
+384/3072 datasets within the package, so external data will be necessary
+for the code below to work. The external data should contain internal
+and external controls for proper calculation and normalization. All file
+paths should be replaced with a path to your data and fixed LOD
+reference file (if applicable).</p>
+</div>
+<div id="integrating-lod" class="section level2">
+<h2>Integrating LOD</h2>
+<p>Limit of Detection (LOD) is a metric that indicates the lowest
+measurable value of a protein. LOD can be helpful when performing
+technical evaluations of NPX™ datasets, such as calculating CVs. As a
+note, LOD is less important in downstream statistical analyses as values
+under LOD typically converge across groups. As such, including data
+below LOD is unlikely to increase the risk of false positive
+discoveries. Furthermore, data below LOD can be instrumental in
+downstream analyses such as biomarker discovery as a protein may be well
+expressed in one group and not measured in another group. In this case,
+this protein can be a strong biomarker candidate for specific
+groups.</p>
+<p>LOD can be added to Olink Explore NPX datasets using
+<code>olink_lod()</code>. This function can calculate LOD from an NPX
+dataset using the dataset’s negative controls or a list of predetermined
+fixed LOD values (available in the Document Download Center at <a href="https://olink.com/">olink.com</a>). As the default setting,
+<code>olink_lod()</code> will calculate LOD using a dataset’s negative
+controls.</p>
+<p>Olink Explore data is commonly delivered plate control (PC)
+normalized or intensity normalized (the normalization type employed is
+indicated in the NPX file column Normalization), where the latter is
+dependent on that the analyzed samples are randomized. These are
+reported in the two respective columns PCNormalizedNPX and NPX. Please
+notice that for PC normalized datasets the content in these two columns
+will be identical, while for intensity normalized datasets the NPX
+column will include the intensity normalized values. Similarly, the
+<code>olink_lod()</code> function adds two columns to your dataset;
+PCNormalizedLOD and LOD respectively. For a PC normalized dataset the
+content in these two columns will be identical, while for an intensity
+normalized dataset the LOD column will contain intensity normalized LOD
+values. Examples of results for plate control and intensity
+normalization are shown in the tables below.</p>
+<table class="table" style="font-size: 10px; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+Example results from Plate Control Normalized Project
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+SampleID
+</th>
+<th style="text-align:left;">
+SampleType
+</th>
+<th style="text-align:left;">
+OlinkID
+</th>
+<th style="text-align:left;">
+UniProt
+</th>
+<th style="text-align:left;">
+Assay
+</th>
+<th style="text-align:right;">
+Count
+</th>
+<th style="text-align:right;">
+NPX
+</th>
+<th style="text-align:right;">
+PCNormalizedNPX
+</th>
+<th style="text-align:left;">
+Normalization
+</th>
+<th style="text-align:right;">
+LOD
+</th>
+<th style="text-align:right;">
+PCNormalizedLOD
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+A1
+</td>
+<td style="text-align:left;">
+SAMPLE
+</td>
+<td style="text-align:left;">
+OID01216
+</td>
+<td style="text-align:left;">
+O00533
+</td>
+<td style="text-align:left;">
+CHL1
+</td>
+<td style="text-align:right;">
+1425
+</td>
+<td style="text-align:right;">
+12.96
+</td>
+<td style="text-align:right;">
+12.96
+</td>
+<td style="text-align:left;">
+Plate control
+</td>
+<td style="text-align:right;">
+2.37
+</td>
+<td style="text-align:right;">
+2.37
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+A2
+</td>
+<td style="text-align:left;">
+SAMPLE
+</td>
+<td style="text-align:left;">
+OID01216
+</td>
+<td style="text-align:left;">
+O00533
+</td>
+<td style="text-align:left;">
+CHL1
+</td>
+<td style="text-align:right;">
+1240
+</td>
+<td style="text-align:right;">
+11.27
+</td>
+<td style="text-align:right;">
+11.27
+</td>
+<td style="text-align:left;">
+Plate control
+</td>
+<td style="text-align:right;">
+2.37
+</td>
+<td style="text-align:right;">
+2.37
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+A3
+</td>
+<td style="text-align:left;">
+SAMPLE
+</td>
+<td style="text-align:left;">
+OID01216
+</td>
+<td style="text-align:left;">
+O00533
+</td>
+<td style="text-align:left;">
+CHL1
+</td>
+<td style="text-align:right;">
+2800
+</td>
+<td style="text-align:right;">
+25.45
+</td>
+<td style="text-align:right;">
+25.45
+</td>
+<td style="text-align:left;">
+Plate control
+</td>
+<td style="text-align:right;">
+2.37
+</td>
+<td style="text-align:right;">
+2.37
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+A4
+</td>
+<td style="text-align:left;">
+SAMPLE
+</td>
+<td style="text-align:left;">
+OID01216
+</td>
+<td style="text-align:left;">
+O00533
+</td>
+<td style="text-align:left;">
+CHL1
+</td>
+<td style="text-align:right;">
+1590
+</td>
+<td style="text-align:right;">
+14.45
+</td>
+<td style="text-align:right;">
+14.45
+</td>
+<td style="text-align:left;">
+Plate control
+</td>
+<td style="text-align:right;">
+2.37
+</td>
+<td style="text-align:right;">
+2.37
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+A5
+</td>
+<td style="text-align:left;">
+SAMPLE
+</td>
+<td style="text-align:left;">
+OID01216
+</td>
+<td style="text-align:left;">
+O00533
+</td>
+<td style="text-align:left;">
+CHL1
+</td>
+<td style="text-align:right;">
+839
+</td>
+<td style="text-align:right;">
+7.63
+</td>
+<td style="text-align:right;">
+7.63
+</td>
+<td style="text-align:left;">
+Plate control
+</td>
+<td style="text-align:right;">
+2.37
+</td>
+<td style="text-align:right;">
+2.37
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+A6
+</td>
+<td style="text-align:left;">
+SAMPLE
+</td>
+<td style="text-align:left;">
+OID01216
+</td>
+<td style="text-align:left;">
+O00533
+</td>
+<td style="text-align:left;">
+CHL1
+</td>
+<td style="text-align:right;">
+695
+</td>
+<td style="text-align:right;">
+6.32
+</td>
+<td style="text-align:right;">
+6.32
+</td>
+<td style="text-align:left;">
+Plate control
+</td>
+<td style="text-align:right;">
+2.37
+</td>
+<td style="text-align:right;">
+2.37
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table" style="font-size: 10px; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+Example results from Intensity Normalized Project
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+SampleID
+</th>
+<th style="text-align:left;">
+SampleType
+</th>
+<th style="text-align:left;">
+OlinkID
+</th>
+<th style="text-align:left;">
+UniProt
+</th>
+<th style="text-align:left;">
+Assay
+</th>
+<th style="text-align:right;">
+Count
+</th>
+<th style="text-align:right;">
+NPX
+</th>
+<th style="text-align:right;">
+PCNormalizedNPX
+</th>
+<th style="text-align:left;">
+Normalization
+</th>
+<th style="text-align:right;">
+LOD
+</th>
+<th style="text-align:right;">
+PCNormalizedLOD
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+A1
+</td>
+<td style="text-align:left;">
+SAMPLE
+</td>
+<td style="text-align:left;">
+OID01216
+</td>
+<td style="text-align:left;">
+O00533
+</td>
+<td style="text-align:left;">
+CHL1
+</td>
+<td style="text-align:right;">
+1425
+</td>
+<td style="text-align:right;">
+17.12
+</td>
+<td style="text-align:right;">
+12.96
+</td>
+<td style="text-align:left;">
+Intensity
+</td>
+<td style="text-align:right;">
+6.53
+</td>
+<td style="text-align:right;">
+2.37
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+A2
+</td>
+<td style="text-align:left;">
+SAMPLE
+</td>
+<td style="text-align:left;">
+OID01216
+</td>
+<td style="text-align:left;">
+O00533
+</td>
+<td style="text-align:left;">
+CHL1
+</td>
+<td style="text-align:right;">
+1240
+</td>
+<td style="text-align:right;">
+15.43
+</td>
+<td style="text-align:right;">
+11.27
+</td>
+<td style="text-align:left;">
+Intensity
+</td>
+<td style="text-align:right;">
+6.53
+</td>
+<td style="text-align:right;">
+2.37
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+A3
+</td>
+<td style="text-align:left;">
+SAMPLE
+</td>
+<td style="text-align:left;">
+OID01216
+</td>
+<td style="text-align:left;">
+O00533
+</td>
+<td style="text-align:left;">
+CHL1
+</td>
+<td style="text-align:right;">
+2800
+</td>
+<td style="text-align:right;">
+29.61
+</td>
+<td style="text-align:right;">
+25.45
+</td>
+<td style="text-align:left;">
+Intensity
+</td>
+<td style="text-align:right;">
+6.53
+</td>
+<td style="text-align:right;">
+2.37
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+A4
+</td>
+<td style="text-align:left;">
+SAMPLE
+</td>
+<td style="text-align:left;">
+OID01216
+</td>
+<td style="text-align:left;">
+O00533
+</td>
+<td style="text-align:left;">
+CHL1
+</td>
+<td style="text-align:right;">
+1590
+</td>
+<td style="text-align:right;">
+18.61
+</td>
+<td style="text-align:right;">
+14.45
+</td>
+<td style="text-align:left;">
+Intensity
+</td>
+<td style="text-align:right;">
+6.53
+</td>
+<td style="text-align:right;">
+2.37
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+A5
+</td>
+<td style="text-align:left;">
+SAMPLE
+</td>
+<td style="text-align:left;">
+OID01216
+</td>
+<td style="text-align:left;">
+O00533
+</td>
+<td style="text-align:left;">
+CHL1
+</td>
+<td style="text-align:right;">
+839
+</td>
+<td style="text-align:right;">
+11.79
+</td>
+<td style="text-align:right;">
+7.63
+</td>
+<td style="text-align:left;">
+Intensity
+</td>
+<td style="text-align:right;">
+6.53
+</td>
+<td style="text-align:right;">
+2.37
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+A6
+</td>
+<td style="text-align:left;">
+SAMPLE
+</td>
+<td style="text-align:left;">
+OID01216
+</td>
+<td style="text-align:left;">
+O00533
+</td>
+<td style="text-align:left;">
+CHL1
+</td>
+<td style="text-align:right;">
+695
+</td>
+<td style="text-align:right;">
+10.48
+</td>
+<td style="text-align:right;">
+6.32
+</td>
+<td style="text-align:left;">
+Intensity
+</td>
+<td style="text-align:right;">
+6.53
+</td>
+<td style="text-align:right;">
+2.37
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="import-olink-explore-datasets" class="section level2">
+<h2>Import Olink Explore datasets</h2>
+<p>Olink Explore datasets are standard Olink Explore HT and Olink
+Explore 384/3072 NPX tables. The <code>read_NPX()</code> function can be
+used to import an NPX file in parquet form as generated by Olink® NPX
+Explore Software. More information on using <code>read_NPX()</code> can
+be found in <a href="Vignett.html">the Olink Analyze Overview
+tutorial</a>.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>explore_npx <span class="ot">&lt;-</span> <span class="fu">read_NPX</span>(<span class="st">&quot;~/Explore_NPX_file.parquet&quot;</span>)</span></code></pre></div>
+</div>
+<div id="integrating-negative-control-lod" class="section level2">
+<h2>Integrating Negative Control LOD</h2>
+<p>The negative control (NC) LOD method requires at least 10 negative
+controls in a dataset. Negative control data is available in the
+standard exported Explore HT and Explore 384/3072 NPX parquet files. NCs
+can be identified through the SampleID and SampleType columns.</p>
+<p>A negative control will not contribute to the minimum number of
+required NCs if the negative control does not pass sample QC criteria
+(sample QC failure or warning) in all of the data (i.e. all Explore HT
+blocks, all Explore 3072 panels, or all Explore 384 panels that were
+measured)</p>
+<p>Negative controls are used to calculate LOD from either PC normalized
+NPX or counts. For assays with more than 150 counts in one of the
+negative controls, LOD is calculated using the median PC normalized NPX
+and adding 3 standard deviations, or 0.2 NPX whichever is larger. For
+assays with fewer than 150 counts in all negative controls, LOD is
+calculated using the count values which are then converted into PC
+normalized NPX.</p>
+<p>The resulting LOD is the PC normalized negative control LOD. In the
+event that the Explore dataset is intensity normalized, an intensity
+normalization adjustment factor is applied and the resulting intensity
+normalized LOD is reported in the LOD column and the PC normalized LOD
+is reported in the PCNormalizedLOD column.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co"># Integrating negative control LOD for intensity normalized data</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>explore_npx <span class="ot">&lt;-</span> <span class="fu">read_NPX</span>(<span class="st">&quot;Path_to/Explore_NPX_file.parquet&quot;</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="fu">olink_lod</span>(explore_npx, <span class="at">lod_method =</span> <span class="st">&quot;NCLOD&quot;</span>)</span></code></pre></div>
+</div>
+<div id="integrating-fixed-lod" class="section level2">
+<h2>Integrating Fixed LOD</h2>
+<p>The fixed LOD method uses fixed LOD values that have been calculated
+on negative controls used in Olink reference runs using the method
+described above for negative control LOD. These values are specific to
+the Data Analysis Reference ID, which can be found in your dataset. The
+fixed LOD data is available in an external CSV file which can be
+downloaded from the Document Download Center at <a href="https://olink.com/">olink.com</a>. The fixed LOD values reported
+in this CSV file are the PC normalized LODs.</p>
+<p>The fixed LOD file is read into the <code>olink_lod()</code> function
+to be integrated into an Explore dataset. In the event that the Explore
+dataset is intensity normalized, an intensity normalization adjustment
+factor is applied and the resulting intensity normalized LOD is reported
+in the LOD column and the PC normalized LOD is reported in the
+PCNormalizedLOD column.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="co"># Reading in Fixed LOD file path into R environment</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>fixedLOD_filepath <span class="ot">&lt;-</span> <span class="st">&quot;Path_to/ExploreHT_fixedLOD.csv&quot;</span></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co"># Integrating Fixed LOD for intensity normalized data</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>explore_npx <span class="ot">&lt;-</span> <span class="fu">read_NPX</span>(<span class="st">&quot;~/Explore_NPX_file.parquet&quot;</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="fu">olink_lod</span>(explore_npx, <span class="at">lod_file_path =</span> fixedLOD_filepath, <span class="at">lod_method =</span> <span class="st">&quot;FixedLOD&quot;</span>)</span></code></pre></div>
+</div>
+<div id="when-to-use-fixed-lod-vs-nc-lod" class="section level2">
+<h2>When to use Fixed LOD vs NC LOD</h2>
+<p>For smaller sized studies (&lt;10 NCs) we recommend using fixed LOD
+to integrate LOD values into your NPX dataset, as LOD calculations on
+fewer NCs may provide non-accurate values. However, it is important to
+keep in mind that fixed LOD values are not specific to your project,
+rather these values are generated by Olink when a new lot of reagents is
+released.</p>
+<p>For larger projects we recommend calculating LOD from NC to obtain
+LOD values that are specific to your project. However, this requires
+that the dataset has at least 10 NCs with passing SampleQC.</p>
+</div>
+<div id="adjusting-lod-for-intensity-normalized-data" class="section level2">
+<h2>Adjusting LOD for Intensity Normalized Data</h2>
+<p>If an Olink Explore dataset is intensity normalized, a normalization
+adjustment factor is applied to the PC normalized LOD within the
+<code>olink_lod()</code> function.</p>
+<p>For each assay, this adjustment factor is calculated as the median
+NPX of all samples (excluding Olink’s external controls) within each
+plate. For Olink Explore 3072, overlapping assays are assessed
+separately, within their respective panels. The intensity normalized
+negative control LOD is calculated by subtracting this adjustment factor
+from the PC normalized negative control LOD.</p>
+<p>The intensity normalization LOD adjustment is applied to both the
+negative control and fixed LOD methods.</p>
+</div>
+<div id="export-olink-explore-data-with-lod" class="section level2">
+<h2>Export Olink Explore Data with LOD</h2>
+<p>Olink Explore data with LOD data can be exported using
+arrow::write_parquet to export Olink Explore data as a parquet file in
+long format.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="co"># Exporting Olink Explore data with LOD information as a parquet file</span></span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>explore_npx <span class="ot">&lt;-</span> <span class="fu">read_NPX</span>(<span class="st">&quot;Path_to/Explore_NPX_file.parquet&quot;</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>explore_npx_NC_LOD <span class="ot">&lt;-</span> explore_npx <span class="sc">%&gt;%</span> </span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>  <span class="fu">olink_lod</span>(<span class="at">lod_method =</span> <span class="st">&quot;NCLOD&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>  arrow<span class="sc">::</span><span class="fu">write_parquet</span>(, <span class="at">file =</span> <span class="st">&quot;NPX_data_NC_LOD.parquet&quot;</span>)</span></code></pre></div>
+</div>
+<div id="contact-us" class="section level2">
+<h2>Contact Us</h2>
+<p>We are always happy to help. Email us with any questions:</p>
+<ul>
+<li><p>biostat@olink.com for statistical services and general stats
+questions</p></li>
+<li><p>support@olink.com for Olink lab product and technical
+support</p></li>
+<li><p>info@olink.com for more information</p></li>
+</ul>
+</div>
+<div id="legal-disclaimer" class="section level2">
+<h2>Legal Disclaimer</h2>
+<p>© 2024 Olink Proteomics AB.</p>
+<p>Olink products and services are For Research Use Only and not for Use
+in Diagnostic Procedures.</p>
+<p>All information in this document is subject to change without notice.
+This document is not intended to convey any warranties, representations
+and/or recommendations of any kind, unless such warranties,
+representations and/or recommendations are explicitly stated.</p>
+<p>Olink assumes no liability arising from a prospective reader’s
+actions based on this document.</p>
+<p>OLINK, NPX, PEA, PROXIMITY EXTENSION, INSIGHT and the Olink logotype
+are trademarks registered, or pending registration, by Olink Proteomics
+AB. All third-party trademarks are the property of their respective
+owners.</p>
+<p>Olink products and assay methods are covered by several patents and
+patent applications <a href="https://olink.com/patents/" class="uri">https://olink.com/patents/</a>.</p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

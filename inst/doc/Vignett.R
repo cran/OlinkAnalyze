@@ -70,6 +70,16 @@ library(stringr)
 #                      df2_project_nr = '20200002',
 #                      reference_project = '20200001')
 
+## ----NCLOD_example, eval = F, echo = T----------------------------------------
+#  # Integrating negative control LOD into Explore NPX dataset
+#  explore_npx <- read_NPX("~/Explore_NPX_file.parquet")
+#  olink_lod(explore_npx, lod_method = "NCLOD")
+#  
+#  # Integrating fixed LOD into Explore NPX dataset - note that these are NOT real fixed LOD values
+#  fixedLOD_filepath <- "~/ExploreHT_fixedLOD.csv"
+#  explore_npx <- read_NPX("~/Explore_NPX_file.parquet")
+#  olink_lod(explore_npx, lod_file_path = fixedLOD_filepath, lod_method = "FixedLOD")
+
 ## ----message=FALSE, eval=FALSE------------------------------------------------
 #  olink_ttest(df = npx_data1,
 #              variable = 'Treatment')
