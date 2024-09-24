@@ -23,62 +23,29 @@ library(stringr)
 #  data <- read_NPX("~/NPX_file_location.xlsx")
 
 ## ----message=FALSE, eval=FALSE------------------------------------------------
-#  olink_plate_randomizer(manifest,
-#                         SubjectColumn ="SubjectID",
-#                         seed=111)
-
-## ----message=FALSE, eval=FALSE------------------------------------------------
-#  # Select overlapping samples
-#  olink_bridgeselector(df = npx_data1,
-#                       sampleMissingFreq = 0.1,
-#                       n = 8)
-
-## ----message=FALSE, eval=FALSE------------------------------------------------
-#  # Find overlapping samples
-#  overlap_samples <- intersect(npx_data1$SampleID, npx_data2$SampleID) %>%
-#    data.frame() %>%
-#    filter(!str_detect(., 'CONTROL_SAMPLE')) %>% #Remove control samples
-#    pull(.)
-#  # Perform Bridging normalization
-#  olink_normalization(df1 = npx_data1,
-#                      df2 = npx_data2,
-#                      overlapping_samples_df1 = overlap_samples,
-#                      df1_project_nr = '20200001',
-#                      df2_project_nr = '20200002',
-#                      reference_project = '20200001')
+#  # Read in multiple NPX files in .csv format
+#  data <-  list.files(path = "path/to/dir/with/NPX/files",
+#                      pattern = "csv$",
+#                      full.names = TRUE) |>
+#           lapply(FUN = function(x){
+#      OlinkAnalyze::read_NPX(x) |>
+#        dplyr::mutate(File = x) # Optionally add additional columns to add file identifiers
+#        }  |>
+#           dplyr::bind_rows() # optional to return a single data frame of all files instead of a list of data frames
 #  
-#  # Example of using all samples for normalization
-#  subset_df1 <- npx_data1 %>%
-#    group_by(SampleID) %>%
-#    filter(all(QC_Warning == 'Pass')) %>%
-#    filter(!str_detect(SampleID, 'CONTROL_SAMPLE')) %>%
-#    pull(SampleID) %>%
-#    unique()
+#  # Read in multiple NPX files in .parquet format
+#  data <-  list.files(path = "path/to/dir/with/NPX/files",
+#                      pattern = "parquet$",
+#                      full.names = TRUE) |>
+#           lapply(OlinkAnalyze::read_NPX)  |>
+#           dplyr::bind_rows()
 #  
-#  subset_df2 <- npx_data2 %>%
-#    group_by(SampleID) %>%
-#    filter(all(QC_Warning == 'Pass')) %>%
-#    filter(!str_detect(SampleID, 'CONTROL_SAMPLE')) %>%
-#    pull(SampleID) %>%
-#    unique()
-#  
-#  olink_normalization(df1 = npx_data1,
-#                      df2 = npx_data2,
-#                      overlapping_samples_df1 = subset_df1,
-#                      overlapping_samples_df2 = subset_df2,
-#                      df1_project_nr = '20200001',
-#                      df2_project_nr = '20200002',
-#                      reference_project = '20200001')
-
-## ----NCLOD_example, eval = F, echo = T----------------------------------------
-#  # Integrating negative control LOD into Explore NPX dataset
-#  explore_npx <- read_NPX("~/Explore_NPX_file.parquet")
-#  olink_lod(explore_npx, lod_method = "NCLOD")
-#  
-#  # Integrating fixed LOD into Explore NPX dataset - note that these are NOT real fixed LOD values
-#  fixedLOD_filepath <- "~/ExploreHT_fixedLOD.csv"
-#  explore_npx <- read_NPX("~/Explore_NPX_file.parquet")
-#  olink_lod(explore_npx, lod_file_path = fixedLOD_filepath, lod_method = "FixedLOD")
+#  # Read in multiple NPX files in either format
+#  data <-  list.files(path = "path/to/dir/with/NPX/files",
+#                      pattern = "parquet$|csv$",
+#                      full.names = TRUE) |>
+#           lapply(OlinkAnalyze::read_NPX)  |>
+#           dplyr::bind_rows()
 
 ## ----message=FALSE, eval=FALSE------------------------------------------------
 #  olink_ttest(df = npx_data1,
@@ -89,112 +56,68 @@ library(stringr)
 #               variable = 'Treatment')
 
 ## ----message=FALSE, eval=FALSE------------------------------------------------
+#  # Remove control samples and assays
+#  npx_data1_no_controls <- npx_data1 |>
+#    filter(!str_detect(SampleID,
+#                       regex("control|ctrl",
+#                             ignore_case = TRUE))) |>
+#    filter(!str_detect(Assay,
+#                       regex("control|ctrl",
+#                             ignore_case = TRUE)))
+#  
 #  # One-way ANOVA, no covariates
-#  anova_results_oneway <- olink_anova(df = npx_data1,
+#  anova_results_oneway <- olink_anova(df = npx_data1_no_controls,
 #                                      variable = 'Site')
 #  # Two-way ANOVA, no covariates
-#  anova_results_twoway <- olink_anova(df = npx_data1,
+#  anova_results_twoway <- olink_anova(df = npx_data1_no_controls,
 #                                      variable = c('Site', 'Time'))
 #  # One-way ANOVA, Treatment as covariates
-#  anova_results_oneway <- olink_anova(df = npx_data1,
+#  anova_results_oneway <- olink_anova(df = npx_data1_no_controls,
 #                                      variable = 'Site',
 #                                      covariates = 'Treatment')
 
 ## ----message=FALSE, eval=FALSE------------------------------------------------
 #  # calculate the p-value for the ANOVA
-#  anova_results_oneway <- olink_anova(df = npx_data1,
+#  anova_results_oneway <- olink_anova(df = npx_data1_no_controls,
 #                                      variable = 'Site')
 #  # extracting the significant proteins
 #  anova_results_oneway_significant <- anova_results_oneway %>%
 #    filter(Threshold == 'Significant') %>%
 #    pull(OlinkID)
-#  anova_posthoc_oneway_results <- olink_anova_posthoc(df = npx_data1,
+#  anova_posthoc_oneway_results <- olink_anova_posthoc(df = npx_data1_no_controls,
 #                                                      olinkid_list = anova_results_oneway_significant,
 #                                                      variable = 'Site',
 #                                                      effect = 'Site')
 
 ## ----message=FALSE, eval=FALSE------------------------------------------------
-#  # One-way Kruskal-Wallis Test
-#  kruskal_results <- olink_one_non_parametric(df = npx_df,
-#                                              variable = "Time")
-#  # One-way Friedman Test
-#  friedman_results <- olink_one_non_parametric(df = npx_df,
-#                                               variable = "Time",
-#                                               subject = "Subject",
-#                                               dependence = TRUE)
-
-## ----message=FALSE, eval=FALSE------------------------------------------------
-#  #Friedman Test
-#  Friedman_results <- olink_one_non_parametric(df = npx_data1,
-#                                               variable = "Time",
-#                                               subject = "Subject",
-#                                               dependence = TRUE)
-#  
-#  #Filtering out significant and relevant results.
-#  significant_assays <- Friedman_results %>%
-#    filter(Threshold == 'Significant') %>%
-#    dplyr::select(OlinkID) %>%
-#    distinct() %>%
-#    pull()
-#  
-#  #Posthoc test for the results from Friedman Test
-#  friedman_posthoc_results <- olink_one_non_parametric_posthoc(npx_data1,
-#                                                               variable = "Time",
-#                                                               test = "friedman",
-#                                                               olinkid_list = significant_assays)
-
-## ----message=FALSE, eval=FALSE------------------------------------------------
-#  # Two-way ordinal regression, no covariates
-#  ordinalRegression_results_twoway <- olink_ordinalRegression(df = npx_data1,
-#                                                              variable = c('Site', 'Time'))
-#  # One-way ordinal regression, Treatment as covariates
-#  ordinalRegression_oneway <- olink_ordinalRegression(df = npx_data1,
-#                                          variable = 'Site',
-#                                          covariates = 'Treatment')
-
-## ----message=FALSE, eval=FALSE------------------------------------------------
-#  # Two-way Ordinal Regression
-#  ordinalRegression_results <- olink_ordinalRegression(df = npx_data1,
-#                               variable="Treatment:Time")
-#  # extracting the significant proteins
-#  significant_assays <- ordinalRegression_results %>%
-#    filter(Threshold == 'Significant' & term == 'Treatment:Time') %>%
-#    select(OlinkID) %>%
-#    distinct() %>%
-#    pull()
-#  # Posthoc test for the model NPX~Treatment*Time,
-#  ordinalRegression_posthoc_results <- olink_ordinalRegression_posthoc(npx_data1,
-#                                                                       variable=c("Treatment:Time"),
-#                                                                       covariates="Site",
-#                                                                       olinkid_list = significant_assays,
-#                                                                       effect = "Treatment:Time")
-#  
-
-## ----message=FALSE, eval=FALSE------------------------------------------------
+#  if (requireNamespace("lme4", quietly = TRUE) & requireNamespace("lmerTest", quietly = TRUE)){
 #  # Linear mixed model with one variable.
-#  lmer_results_oneway <- olink_lmer(df = npx_data1,
-#                                    variable = 'Site',
-#                                    random = 'Subject')
+#    lmer_results_oneway <- olink_lmer(df = npx_data1,
+#                                      variable = 'Site',
+#                                      random = 'Subject')
 #  # Linear mixed model with two variables.
-#  lmer_results_twoway <- olink_lmer(df = npx_data1,
-#                                    variable = c('Site', 'Treatment'),
-#                                    random = 'Subject')
+#    lmer_results_twoway <- olink_lmer(df = npx_data1,
+#                                      variable = c('Site', 'Treatment'),
+#                                      random = 'Subject')
+#  }
 
 ## ----message=FALSE, eval=FALSE------------------------------------------------
-#  # Linear mixed model with two variables.
-#  lmer_results_twoway <- olink_lmer(df = npx_data1,
-#                                    variable = c('Site', 'Treatment'),
-#                                    random = 'Subject')
-#  # extracting the significant proteins
-#  lmer_results_twoway_significant <- lmer_results_twoway %>%
-#    filter(Threshold == 'Significant', term == 'Treatment') %>%
-#    pull(OlinkID)
-#  # performing post-hoc analysis
-#  lmer_posthoc_twoway_results <- olink_lmer_posthoc(df = npx_data1,
-#                                                    olinkid_list = lmer_results_twoway_significant,
-#                                                    variable = c('Site', 'Treatment'),
-#                                                    random = 'Subject',
-#                                                    effect = 'Treatment')
+#  if (requireNamespace("lme4", quietly = TRUE) & requireNamespace("lmerTest", quietly = TRUE)){
+#    # Linear mixed model with two variables.
+#    lmer_results_twoway <- olink_lmer(df = npx_data1,
+#                                      variable = c('Site', 'Treatment'),
+#                                      random = 'Subject')
+#    # extracting the significant proteins
+#    lmer_results_twoway_significant <- lmer_results_twoway %>%
+#      filter(Threshold == 'Significant', term == 'Treatment') %>%
+#      pull(OlinkID)
+#    # performing post-hoc analysis
+#    lmer_posthoc_twoway_results <- olink_lmer_posthoc(df = npx_data1,
+#                                                      olinkid_list = lmer_results_twoway_significant,
+#                                                      variable = c('Site', 'Treatment'),
+#                                                      random = 'Subject',
+#                                                      effect = 'Treatment')
+#  }
 
 ## ----message=FALSE------------------------------------------------------------
 npx_df <- npx_data1 %>% filter(!grepl("control", SampleID, ignore.case = TRUE))
@@ -211,22 +134,6 @@ ora_results <- olink_pathway_enrichment(
 }, silent = TRUE)
 
 ## ----message=FALSE------------------------------------------------------------
-npx_data1 %>% 
-  filter(!str_detect(SampleID, 'CONTROL_SAMPLE')) %>% 
-  olink_pca_plot(df = .,
-                 color_g = "QC_Warning", byPanel = TRUE)  
-
-## ----message = FALSE----------------------------------------------------------
-npx_data <- npx_data1 %>%
-    mutate(SampleID = paste(SampleID, "_", Index, sep = ""))
-g <- olink_pca_plot(df=npx_data, color_g = "QC_Warning",
-                    outlierDefX = 2.5, outlierDefY = 4, byPanel = TRUE, quiet = TRUE)
-lapply(g, function(x){x$data}) %>%
-  bind_rows() %>%
-  filter(Outlier == 1) %>% 
-  select(SampleID, Outlier, Panel)
-
-## ----message=FALSE------------------------------------------------------------
 if (requireNamespace("umap", quietly = TRUE) ){
 npx_data1 %>% 
   filter(!str_detect(SampleID, 'CONTROL_SAMPLE')) %>% 
@@ -241,19 +148,28 @@ npx_data1 %>%
 #                   color_g = "QC_Warning", byPanel = TRUE)
 
 ## ----message=FALSE------------------------------------------------------------
-plot <- npx_data1 %>%
+# Remove control samples and assays
+npx_data1_no_controls <- npx_data1 |>
+  filter(!str_detect(SampleID,
+                     regex("control|ctrl", 
+                           ignore_case = TRUE))) |>
+  filter(!str_detect(Assay, 
+                     regex("control|ctrl", 
+                           ignore_case = TRUE)))
+
+plot <- npx_data1_no_controls %>%
   na.omit() %>% # removing missing values which exists for Site
   olink_boxplot(variable = "Site", 
                 olinkid_list = c("OID00488", "OID01276"),
                 number_of_proteins_per_plot  = 2)
 plot[[1]]
 
-anova_posthoc_results<-npx_data1 %>% 
+anova_posthoc_results<-npx_data1_no_controls %>% 
   olink_anova_posthoc(olinkid_list = c("OID00488", "OID01276"),
                       variable = 'Site',
                       effect = 'Site')
 
-plot2 <- npx_data1 %>%
+plot2 <- npx_data1_no_controls %>%
   na.omit() %>% # removing missing values which exists for Site
   olink_boxplot(variable = "Site", 
                 olinkid_list = c("OID00488", "OID01276"),
@@ -263,20 +179,16 @@ plot2 <- npx_data1 %>%
 plot2[[1]]
 
 
-## ----message=FALSE------------------------------------------------------------
-npx_data1 %>% 
-  filter(Panel == 'Olink Cardiometabolic') %>% # For this example only plotting one panel.
-  olink_dist_plot() +
-  theme(axis.text.x = element_blank()) # Due to the number of samples one can remove the text or rotate it
-
 ## ----message=FALSE, fig.width= 8----------------------------------------------
-plot <- olink_lmer_plot(df = npx_data1, 
-                        olinkid_list = c("OID01216", "OID01217"), 
-                        variable = c('Site', 'Treatment'), 
-                        x_axis_variable =  'Site',
-                        col_variable = 'Treatment',
-                        random = 'Subject')
-plot[[1]]
+if (requireNamespace("lme4", quietly = TRUE) & requireNamespace("lmerTest", quietly = TRUE)){
+  plot <- olink_lmer_plot(df = npx_data1, 
+                          olinkid_list = c("OID01216", "OID01217"), 
+                          variable = c('Site', 'Treatment'), 
+                          x_axis_variable =  'Site',
+                          col_variable = 'Treatment',
+                          random = 'Subject')
+  plot[[1]]
+}
 
 ## ----message=FALSE, fig.height=4, fig.width=8---------------------------------
 # GSEA Heatmap from t-test results
@@ -290,16 +202,6 @@ try({ # This expression might fail if dependencies are not installed
 olink_pathway_heatmap(enrich_results = ora_results, test_results = ttest_results,
                       method = "ORA", keyword = "cell")
 })
-
-## ----message=FALSE------------------------------------------------------------
-npx_data1 %>% 
-  filter(!str_detect(SampleID, 'CONTROL_SAMPLE'),
-         Panel == 'Olink Inflammation') %>% 
-  olink_qc_plot(color_g = "QC_Warning")   
-
-## ----message = FALSE----------------------------------------------------------
-qc <- olink_qc_plot(npx_data1, color_g = "QC_Warning", IQR_outlierDef = 3, median_outlierDef = 3)
-qc$data %>% filter(Outlier == 1) %>% select(SampleID, Panel, IQR, sample_median, Outlier)
 
 ## ----message=FALSE, fig.height=4----------------------------------------------
 first10 <- npx_data1 %>%

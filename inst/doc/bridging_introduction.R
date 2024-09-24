@@ -22,10 +22,14 @@ library(kableExtra)
 ## ----brnrtab, message=FALSE, echo=FALSE---------------------------------------
 data.frame(Platform = c("Target 96",
                          "Explore 384 Cardiometabolic, Inflammation, Neurology, and Oncology",
-                        "Explore 384 Cardiometabolic II, Inflammation II, Neurology II, and Oncology II"),
+                        "Explore 384 Cardiometabolic II, Inflammation II, Neurology II, and Oncology II",
+                        "Explore HT", 
+                        "Explore 3072 to Explore HT"),
            BridgingSamples = c("8-16",
                                "8-16",
-                              "16-24")) %>%
+                              "16-24",
+                              "16-32",
+                              "40-64")) %>%
   kbl(booktabs = TRUE,
       digits = 2,
       caption = "Table 1. Recommended number of bridging samples for Olink platforms") %>%

@@ -1,3 +1,43 @@
+# Olink Analyze 4.0.1
+## Minor Changes
+* larger rds files used for unit tests have been excluded from build to abide by CRAN size limitations (#462, @kathy-nevola)
+
+# Olink Analyze 4.0.0
+## Major Changes
+* olink_normalization can now be used for bridging Explore 3072 data to Explore HT data (#453, #452, #439, #449, #447,#446, #441, #440, #434, #422, #436, #435 @klevdiamanti, @kathy-nevola, @kristynchin-olink, @dtopouza, @amrita-kar, @MasoumehSheikh)
+* olink_normalization has undergone major changes to improve speed, reproducibility, and extending functionality (#418, @klevdiamanti, @kristynchin-olink, @MasoumehSheikh)
+
+
+## Minor Changes
+* New tutorial has been added to explain and support Explore 3072 to Explore HT bridging (#448, #428, #427, #426, #425, #424, #423, @kristynchin-olink, @boxizhang, @dtopouza, @kathy-nevola, @MasoumehSheikh)
+* Update FAQ links in tutorials with queries links (#451, @kathy-nevola)
+* Decrease package size on Mac and Linux (#445, @kathy-nevola)
+* Removed redundant information from overview vignette (#458, @kathy-nevola)
+
+## Bug Fixes
+* Add support back for files with quotes to read_NPX (#431 @kathy-nevola)
+
+# Olink Analyze 3.9.1
+## Bug Fix
+* Extra set of parentheses removed from vignette (#430, @kathy-nevola)
+
+# Olink Analyze 3.9.0
+## Minor Changes
+* Explore HT recommended bridging samples have been added to Introduction to Bridging tutorial (#409, @kathy-nevola)
+* Support for CSVs with SampleQC column was added to read_NPX (#406, @kathy-nevola)
+* Support for Olink Analyze Export parquets was added to read_NPX (#408, @kathy-nevola)
+* Quantitative value csvs will now give a warning about limited support for Quant data (#406, @kathy-nevola)
+* Instructions for importing multiple NPX files has been added to the overview tutorial (#403, @dtopouza)
+* Additional background information was added to the LOD tutorial to clarify how LOD is calculated from counts (#404, @kathy-nevola)
+* LOD can now be calculated using fixed LOD, negative controls, or both methods (#390, @kathy-nevola)
+* An error message will now appear when running anova and control assays are present (#416, @dtopouza)
+* Danai Topouza's role has been changed from contributor to author (#415, @kathy-nevola)
+
+## Bug Fixes
+* URLs in tutorials will now direct to updated olink.com locations (#402,  @kathy-nevola)
+* Instructions to export parquet files with LOD have been updated (#408, @kathy-nevola)
+* removed scale_name argument when ggplot2 3.5+ is installed (#421, @kathy-nevola)
+
 # Olink Analyze 3.8.2
 ## Bug Fixes 
 * update to URL hyperlink in LOD tutorial to include https

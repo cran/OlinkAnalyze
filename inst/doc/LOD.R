@@ -59,11 +59,39 @@ table1 |>
 #  explore_npx <- read_NPX("~/Explore_NPX_file.parquet")
 #  olink_lod(explore_npx, lod_file_path = fixedLOD_filepath, lod_method = "FixedLOD")
 
+## ----echo=FALSE---------------------------------------------------------------
+table1 |>  
+  dplyr::mutate(Normalization = "Intensity") |> 
+  dplyr::mutate(PCNormalizedNPX = round(NPX,digits = 2)) |> 
+  dplyr::mutate(PCNormalizedLOD = round(LOD, digits = 2)) |> 
+  dplyr::mutate(NPX = round(NPX + 4.16, digits = 2))|> 
+  dplyr::mutate(LOD = round(LOD + 4.16, digits = 2)) |>
+  dplyr::rename(FixedLOD = LOD,
+                FixedPCNormalizedLOD = PCNormalizedLOD) |> 
+  dplyr::mutate(NCLOD = FixedLOD - 2.34,
+                NCPCNormalizedLOD = FixedPCNormalizedLOD - 2.34) |> 
+  dplyr::select(SampleID, SampleType, OlinkID, UniProt, Assay, Count, NPX, Normalization, PCNormalizedNPX, FixedLOD, FixedPCNormalizedLOD, NCLOD, NCPCNormalizedLOD) |> 
+  knitr::kable(caption = "Example results using both LOD calculation methods") |> 
+  kableExtra::kable_styling(font_size = 10)
+
 ## ----explore_npx_export, eval = FALSE, message=FALSE, warning=FALSE-----------
 #  # Exporting Olink Explore data with LOD information as a parquet file
 #  explore_npx <- read_NPX("Path_to/Explore_NPX_file.parquet")
 #  
 #  explore_npx_NC_LOD <- explore_npx %>%
-#    olink_lod(lod_method = "NCLOD") %>%
-#    arrow::write_parquet(, file = "NPX_data_NC_LOD.parquet")
+#    olink_lod(lod_method = "NCLOD")
+#  
+#  # Add metadata for export
+#  df <- explore_npx_NC_LOD |>
+#    arrow::as_arrow_table()
+#  
+#  df$metadata$FileVersion <- "NA"
+#  df$metadata$ExploreVersion <- "NA"
+#  df$metadata$ProjectName <- "NA"
+#  df$metadata$SampleMatrix <- "NA"
+#  df$metadata$DataFileType <- "Olink Analyze Export File"
+#  df$metadata$ProductType <- "ExploreHT" # "ExploreHT" or "Explore3072"
+#  df$metadata$Product <- "ExploreHT" # "ExploreHT" or "Explore3072"
+#  
+#  arrow::write_parquet(x = df, sink = "path_to_output.parquet")
 
