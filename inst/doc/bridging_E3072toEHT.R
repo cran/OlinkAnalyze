@@ -194,7 +194,7 @@ knitr::include_graphics(normalizePath("../man/figures/bridges_pre_bridging.png")
 #  
 #  ### Keep the data following BridgingRecommendation
 #  npx_after_br_reco <- npx_br_data |>
-#    dplyr::filter(BridgingRecommendation != "Not Bridgeable") |>
+#    dplyr::filter(BridgingRecommendation != "NotBridgeable") |>
 #    dplyr::mutate(NPX = case_when(
 #      BridgingRecommendation == "MedianCentering" ~ MedianCenteredNPX,
 #      BridgingRecommendation == "QuantileSmoothing" ~ QSNormalizedNPX,
@@ -249,7 +249,7 @@ knitr::include_graphics(normalizePath("../man/figures/bridges_post_bridging.png"
 #  # Option 1: Exclude non bridgeable assays from both products
 #  npx_recommended <- npx_after_br_final |>
 #    dplyr::mutate(NPX_original = NPX) |>
-#    dplyr::filter(BridgingRecommendation != "Not Bridgeable") |>
+#    dplyr::filter(BridgingRecommendation != "NotBridgeable") |>
 #    dplyr::mutate(NPX = case_when(
 #      BridgingRecommendation == "MedianCentering" ~ MedianCenteredNPX,
 #      BridgingRecommendation == "QuantileSmoothing" ~ QSNormalizedNPX,
