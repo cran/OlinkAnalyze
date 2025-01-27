@@ -44,20 +44,20 @@ table1 |>
 
 
 ## ----dataset_generation, eval = FALSE, message=FALSE, warning=FALSE-----------
-#  explore_npx <- read_NPX("~/Explore_NPX_file.parquet")
+# explore_npx <- read_NPX("~/Explore_NPX_file.parquet")
 
 ## ----NCLOD_example, eval = FALSE, message=FALSE, warning=FALSE----------------
-#  # Integrating negative control LOD for intensity normalized data
-#  explore_npx <- read_NPX("Path_to/Explore_NPX_file.parquet")
-#  olink_lod(explore_npx, lod_method = "NCLOD")
+# # Integrating negative control LOD for intensity normalized data
+# explore_npx <- read_NPX("Path_to/Explore_NPX_file.parquet")
+# olink_lod(explore_npx, lod_method = "NCLOD")
 
 ## ----FixedLOD, eval = FALSE, message=FALSE, warning=FALSE---------------------
-#  # Reading in Fixed LOD file path into R environment
-#  fixedLOD_filepath <- "Path_to/ExploreHT_fixedLOD.csv"
-#  
-#  # Integrating Fixed LOD for intensity normalized data
-#  explore_npx <- read_NPX("~/Explore_NPX_file.parquet")
-#  olink_lod(explore_npx, lod_file_path = fixedLOD_filepath, lod_method = "FixedLOD")
+# # Reading in Fixed LOD file path into R environment
+# fixedLOD_filepath <- "Path_to/ExploreHT_fixedLOD.csv"
+# 
+# # Integrating Fixed LOD for intensity normalized data
+# explore_npx <- read_NPX("~/Explore_NPX_file.parquet")
+# olink_lod(explore_npx, lod_file_path = fixedLOD_filepath, lod_method = "FixedLOD")
 
 ## ----echo=FALSE---------------------------------------------------------------
 table1 |>  
@@ -75,23 +75,23 @@ table1 |>
   kableExtra::kable_styling(font_size = 10)
 
 ## ----explore_npx_export, eval = FALSE, message=FALSE, warning=FALSE-----------
-#  # Exporting Olink Explore data with LOD information as a parquet file
-#  explore_npx <- read_NPX("Path_to/Explore_NPX_file.parquet")
-#  
-#  explore_npx_NC_LOD <- explore_npx %>%
-#    olink_lod(lod_method = "NCLOD")
-#  
-#  # Add metadata for export
-#  df <- explore_npx_NC_LOD |>
-#    arrow::as_arrow_table()
-#  
-#  df$metadata$FileVersion <- "NA"
-#  df$metadata$ExploreVersion <- "NA"
-#  df$metadata$ProjectName <- "NA"
-#  df$metadata$SampleMatrix <- "NA"
-#  df$metadata$DataFileType <- "Olink Analyze Export File"
-#  df$metadata$ProductType <- "ExploreHT" # "ExploreHT" or "Explore3072"
-#  df$metadata$Product <- "ExploreHT" # "ExploreHT" or "Explore3072"
-#  
-#  arrow::write_parquet(x = df, sink = "path_to_output.parquet")
+# # Exporting Olink Explore data with LOD information as a parquet file
+# explore_npx <- read_NPX("Path_to/Explore_NPX_file.parquet")
+# 
+# explore_npx_NC_LOD <- explore_npx %>%
+#   olink_lod(lod_method = "NCLOD")
+# 
+# # Add metadata for export
+# df <- explore_npx_NC_LOD |>
+#   arrow::as_arrow_table()
+# 
+# df$metadata$FileVersion <- "NA"
+# df$metadata$ExploreVersion <- "NA"
+# df$metadata$ProjectName <- "NA"
+# df$metadata$SampleMatrix <- "NA"
+# df$metadata$DataFileType <- "Olink Analyze Export File"
+# df$metadata$ProductType <- "ExploreHT" # "ExploreHT", "Explore3072", or "Reveal"
+# df$metadata$Product <- "ExploreHT" # "ExploreHT", "Explore3072", or "Reveal"
+# 
+# arrow::write_parquet(x = df, sink = "path_to_output.parquet")
 

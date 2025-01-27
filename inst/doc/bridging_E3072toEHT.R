@@ -49,25 +49,25 @@ knitr::include_graphics(normalizePath("../man/figures/Bridging_schematic.png"),
 fcap <- "Schematic of Explore 3072 to Explore HT Bridging Workflow"
 
 ## ----message=FALSE, eval=FALSE, echo = TRUE-----------------------------------
-#  # Note: Explore 3072 NPX files can be CSV or parquet.
-#  data_explore3072 <- read_NPX("~/NPX_Explore3072_location.parquet")
-#  data_exploreht <- read_NPX("~/NPX_ExploreHT_location.parquet")
+# # Note: Explore 3072 NPX files can be CSV or parquet.
+# data_explore3072 <- read_NPX("~/NPX_Explore3072_location.parquet")
+# data_exploreht <- read_NPX("~/NPX_ExploreHT_location.parquet")
 
 ## ----echo=TRUE, eval = FALSE--------------------------------------------------
-#  data_explore3072_samples <- data_explore3072 |>
-#    dplyr::filter(SampleType == "SAMPLE") |>
-#    dplyr::distinct(SampleID) |>
-#    dplyr::pull()
-#  
-#  data_exploreht_samples <- data_exploreht |>
-#    dplyr::filter(SampleType == "SAMPLE") |>
-#    dplyr::distinct(SampleID) |>
-#    dplyr::pull()
-#  
-#  overlapping_samples <- unique(intersect(data_explore3072_samples,
-#                                          data_exploreht_samples))
-#  # Note that if `SampleType` is not is input data:
-#  # stringr::str_detect can be used to exclude control samples based on SampleID.
+# data_explore3072_samples <- data_explore3072 |>
+#   dplyr::filter(SampleType == "SAMPLE") |>
+#   dplyr::distinct(SampleID) |>
+#   dplyr::pull()
+# 
+# data_exploreht_samples <- data_exploreht |>
+#   dplyr::filter(SampleType == "SAMPLE") |>
+#   dplyr::distinct(SampleID) |>
+#   dplyr::pull()
+# 
+# overlapping_samples <- unique(intersect(data_explore3072_samples,
+#                                         data_exploreht_samples))
+# # Note that if `SampleType` is not is input data:
+# # stringr::str_detect can be used to exclude control samples based on SampleID.
 
 ## ----echo=FALSE---------------------------------------------------------------
 try(
@@ -88,30 +88,30 @@ f3 <- paste0("PCA plot prior to bridging for Explore 3072 and Explore HT data.",
              " if any bridge samples were outliers in one of the platforms.")
 
 ## ----eval = FALSE-------------------------------------------------------------
-#  #### Extract bridging samples
-#  
-#  data_explore3072_before_br <- data_explore3072 |>
-#    dplyr::filter(SampleType == "SAMPLE") |>
-#    # Note that if `SampleType` is not is input data,
-#    # stringr::str_detect can be used to exclude control samples
-#    #  based on naming convention.
-#    dplyr::mutate(Type = if_else(SampleID %in% overlapping_samples,
-#                                 paste0("Explore 3072 Bridge"),
-#                                 paste0("Explore 3072 Sample")))
-#  
-#  data_exploreht_before_br <- data_exploreht |>
-#    dplyr::filter(SampleType == "SAMPLE") |>
-#    dplyr::mutate(Type = if_else(SampleID %in% overlapping_samples,
-#                                 paste0("Explore HT Bridge"),
-#                                 paste0("Explore HT Sample")))
-#  
-#  ### PCA plot
-#  pca_E3072 <- OlinkAnalyze::olink_pca_plot(df = data_explore3072_before_br,
-#                                           color_g = "Type",
-#                                           quiet = TRUE)
-#  pca_EHT <- OlinkAnalyze::olink_pca_plot(df = data_exploreht_before_br,
+# #### Extract bridging samples
+# 
+# data_explore3072_before_br <- data_explore3072 |>
+#   dplyr::filter(SampleType == "SAMPLE") |>
+#   # Note that if `SampleType` is not is input data,
+#   # stringr::str_detect can be used to exclude control samples
+#   #  based on naming convention.
+#   dplyr::mutate(Type = if_else(SampleID %in% overlapping_samples,
+#                                paste0("Explore 3072 Bridge"),
+#                                paste0("Explore 3072 Sample")))
+# 
+# data_exploreht_before_br <- data_exploreht |>
+#   dplyr::filter(SampleType == "SAMPLE") |>
+#   dplyr::mutate(Type = if_else(SampleID %in% overlapping_samples,
+#                                paste0("Explore HT Bridge"),
+#                                paste0("Explore HT Sample")))
+# 
+# ### PCA plot
+# pca_E3072 <- OlinkAnalyze::olink_pca_plot(df = data_explore3072_before_br,
 #                                          color_g = "Type",
 #                                          quiet = TRUE)
+# pca_EHT <- OlinkAnalyze::olink_pca_plot(df = data_exploreht_before_br,
+#                                         color_g = "Type",
+#                                         quiet = TRUE)
 
 ## ----echo=FALSE, fig.cap=f3, fig.height= 8, fig.width= 6----------------------
 knitr::include_graphics(normalizePath("../man/figures/PCA_btw_product_before.png"),
@@ -119,19 +119,31 @@ knitr::include_graphics(normalizePath("../man/figures/PCA_btw_product_before.png
 
 
 ## ----eval = FALSE-------------------------------------------------------------
-#  # Find shared samples
-#  npx_ht <- data_exploreht |>
-#    dplyr::mutate(Project = "data1")
-#  npx_3072 <- data_explore3072 |>
-#    dplyr::mutate(Project = "data2")
-#  
-#  npx_br_data <- olink_normalization(df1 = npx_ht,
-#                                     df2 = npx_3072,
-#                                     overlapping_samples_df1 =
-#                                       overlapping_samples,
-#                                     df1_project_nr = "Explore HT",
-#                                     df2_project_nr = "Explore 3072",
-#                                     reference_project = "Explore HT")
+# # Find shared samples
+# npx_ht <- data_exploreht |>
+#   dplyr::mutate(Project = "data1")
+# npx_3072 <- data_explore3072 |>
+#   dplyr::mutate(Project = "data2")
+# 
+# # perform between-product bridging without formatting for downstream analysis
+# npx_br_data <- olink_normalization(df1 = npx_ht,
+#                                    df2 = npx_3072,
+#                                    overlapping_samples_df1 =
+#                                      overlapping_samples,
+#                                    df1_project_nr = "Explore HT",
+#                                    df2_project_nr = "Explore 3072",
+#                                    reference_project = "Explore HT",
+#                                    format = FALSE)
+# 
+# # perform between-product bridging with formatting for downstream analysis
+# npx_br_data <- olink_normalization(df1 = npx_ht,
+#                                    df2 = npx_3072,
+#                                    overlapping_samples_df1 =
+#                                      overlapping_samples,
+#                                    df1_project_nr = "Explore HT",
+#                                    df2_project_nr = "Explore 3072",
+#                                    reference_project = "Explore HT",
+#                                    format = TRUE)
 
 ## ----echo=FALSE, fig.cap=fcap, out.width="50%"--------------------------------
 knitr::include_graphics(normalizePath("../man/figures/assay_bridgeability.jpg"), 
@@ -144,12 +156,48 @@ fcap <- paste("Criteria to determine the bridging recommendation for an assay.",
 "Distribution shape is assessed to determine recommended bridging method.", 
 sep = " ")
 
+## ----eval = FALSE-------------------------------------------------------------
+# # generating olink_bridgeability_plot figures
+# npx_br_data_bridgeable_plt <- olink_bridgeability_plot(
+#   data = npx_br_data,
+#   median_counts_threshold = 150,
+#   min_count = 10,
+#   bridge_sampleid = overlapping_samples
+#   )
+# 
+# npx_br_data_bridgeable_plt[[1]]
+
+## ----message=FALSE, echo = FALSE, out.width = "675px", fig.cap = fcap---------
+knitr::include_graphics(normalizePath("../man/figures/bridgeable_plt_MedianCenter.png"), error = FALSE)
+
+fcap <- "Visualization of an assay's bridgeability criteria as generated by the olink_bridgeability_plot function."
+
 ## ----echo=FALSE---------------------------------------------------------------
 try( 
   readRDS(normalizePath("../man/figures/bridging_results.rds")) |> 
     kableExtra::kbl(booktabs = TRUE,
         digits = 1,
-        caption = "Table 4. First 5 rows of combined datasets after bridging.") |>
+        caption = "Table 4. First 5 rows of combined datasets after bridging with between-product formatting argument set to FALSE.") |>
+    kableExtra::kable_styling(bootstrap_options = "striped", full_width = FALSE, font_size = 10, 
+                  position = "center", latex_options = "HOLD_position") |> 
+    kableExtra::scroll_box(width = "100%")
+)
+
+## ----echo=FALSE---------------------------------------------------------------
+try( 
+  readRDS(normalizePath("../man/figures/bridging_results.rds")) |> 
+    dplyr::mutate(NPX = case_when(
+    BridgingRecommendation == "MedianCentering" ~ MedianCenteredNPX,
+    BridgingRecommendation == "QuantileSmoothing" ~ QSNormalizedNPX,
+    .default = NPX)) |>
+    dplyr::mutate(SampleID = paste(SampleID, Project, sep = "_")) |>
+    dplyr::mutate(OlinkID = ifelse(!(BridgingRecommendation == "NotBridgeable"),
+                                   paste(OlinkID, OlinkID_E3072, sep = "_"),
+                                   OlinkID_E3072)) |>
+    dplyr::select(-c("OlinkID_E3072", "MedianCenteredNPX", "QSNormalizedNPX")) |> 
+    kableExtra::kbl(booktabs = TRUE,
+        digits = 1,
+        caption = "Table 5. First 5 rows of combined datasets after bridging with between-product formatting argument set to TRUE.") |>
     kableExtra::kable_styling(bootstrap_options = "striped", full_width = FALSE, font_size = 10, 
                   position = "center", latex_options = "HOLD_position") |> 
     kableExtra::scroll_box(width = "100%")
@@ -162,12 +210,12 @@ f10 <- "Combined PCA of sample controls from both platforms after normalization.
 f11 <- "Combined PCA of bridging samples from both platforms after normalization."
 
 ## ----pca_pre_sc, echo=TRUE, eval = FALSE--------------------------------------
-#  ## Before Bridging
-#  npx_br_data |>
-#    dplyr::filter(SampleType == "SAMPLE_CONTROL") |>
-#    dplyr::mutate(OlinkID = paste0(OlinkID, "_", OlinkID_E3072)) |>
-#    dplyr:::mutate(SampleID = paste0(Project, SampleID)) |>
-#    OlinkAnalyze::olink_pca_plot(color_g = "Project")
+# ## Before Bridging
+# npx_br_data |>
+#   dplyr::filter(SampleType == "SAMPLE_CONTROL") |>
+#   dplyr::mutate(OlinkID = paste0(OlinkID, "_", OlinkID_E3072)) |>
+#   dplyr:::mutate(SampleID = paste0(Project, SampleID)) |>
+#   OlinkAnalyze::olink_pca_plot(color_g = "Project")
 
 ## ----pca_pre_sc_fig, echo=FALSE, fig.cap=f8, message=FALSE--------------------
 ## Before Bridging
@@ -175,101 +223,113 @@ knitr::include_graphics(normalizePath("../man/figures/SCs_pre_bridging.png"),
                         error = FALSE)
 
 ## ----pca_pre_bridge, echo=TRUE, eval=FALSE------------------------------------
-#  ## Before Bridging
-#  npx_br_data |>
-#    dplyr::filter(SampleType == "SAMPLE") |>
-#    dplyr::filter(SampleID %in% overlapping_samples) |>
-#    dplyr::mutate(OlinkID = paste0(OlinkID, "_", OlinkID_E3072)) |>
-#    dplyr:::mutate(SampleID = paste0(Project, SampleID)) |>
-#    OlinkAnalyze::olink_pca_plot(color_g = "Project")
-#  
-#  
+# ## Before Bridging
+# npx_br_data |>
+#   dplyr::filter(SampleType == "SAMPLE") |>
+#   dplyr::filter(SampleID %in% overlapping_samples) |>
+#   dplyr::mutate(OlinkID = paste0(OlinkID, "_", OlinkID_E3072)) |>
+#   dplyr:::mutate(SampleID = paste0(Project, SampleID)) |>
+#   OlinkAnalyze::olink_pca_plot(color_g = "Project")
+# 
+# 
 
 ## ----echo=FALSE, fig.cap=f9---------------------------------------------------
 knitr::include_graphics(normalizePath("../man/figures/bridges_pre_bridging.png"),
                         error = FALSE)
 
 ## ----eval = FALSE-------------------------------------------------------------
-#  ## After bridging PCA
-#  
-#  ### Keep the data following BridgingRecommendation
-#  npx_after_br_reco <- npx_br_data |>
-#    dplyr::filter(BridgingRecommendation != "NotBridgeable") |>
-#    dplyr::mutate(NPX = case_when(
-#      BridgingRecommendation == "MedianCentering" ~ MedianCenteredNPX,
-#      BridgingRecommendation == "QuantileSmoothing" ~ QSNormalizedNPX,
-#      .default = NPX)) |>
-#    dplyr::filter(AssayType == "assay") |>
-#    dplyr::mutate(OlinkID = paste0(OlinkID, "_", OlinkID_E3072))
-#  
+# ## After bridging PCA
+# 
+# ### Keep the data following BridgingRecommendation
+# npx_after_br_reco <- npx_br_data |>
+#   dplyr::filter(BridgingRecommendation != "NotBridgeable") |>
+#   dplyr::mutate(NPX = case_when(
+#     BridgingRecommendation == "MedianCentering" ~ MedianCenteredNPX,
+#     BridgingRecommendation == "QuantileSmoothing" ~ QSNormalizedNPX,
+#     .default = NPX)) |>
+#   dplyr::filter(AssayType == "assay") |>
+#   dplyr::mutate(OlinkID = paste0(OlinkID, "_", OlinkID_E3072))
+# 
 
 ## ----pca_post_SC, eval=FALSE, echo = TRUE-------------------------------------
-#  
-#  ### Generate unique SampleIDs
-#  npx_after_br_final <- npx_after_br_reco |>
-#    dplyr:::mutate(SampleID = paste0(Project, SampleID))
-#  
-#  ### PCA plot of the data from SCs
-#  npx_after_br_final |>
-#      dplyr::filter(SampleType == "SAMPLE_CONTROL") |>
-#      OlinkAnalyze::olink_pca_plot(color_g = "Project")
-#  
+# 
+# ### Generate unique SampleIDs
+# npx_after_br_final <- npx_after_br_reco |>
+#   dplyr:::mutate(SampleID = paste0(Project, SampleID))
+# 
+# ### PCA plot of the data from SCs
+# npx_after_br_final |>
+#     dplyr::filter(SampleType == "SAMPLE_CONTROL") |>
+#     OlinkAnalyze::olink_pca_plot(color_g = "Project")
+# 
 
 ## ----echo=FALSE, fig.cap=f10--------------------------------------------------
 knitr::include_graphics(normalizePath("../man/figures/SCs_post_bridging.png"),
                         error = FALSE)
 
 ## ----echo=TRUE, eval = FALSE--------------------------------------------------
-#  ### PCA plot of the data from bridging samples
-#  npx_after_br_reco |>
-#    dplyr::filter(SampleType == "SAMPLE") |>
-#    dplyr::filter(SampleID %in% overlapping_samples) |>
-#    dplyr:::mutate(SampleID = paste0(Project, SampleID)) |>
-#    OlinkAnalyze::olink_pca_plot(color_g = "Project")
+# ### PCA plot of the data from bridging samples
+# npx_after_br_reco |>
+#   dplyr::filter(SampleType == "SAMPLE") |>
+#   dplyr::filter(SampleID %in% overlapping_samples) |>
+#   dplyr:::mutate(SampleID = paste0(Project, SampleID)) |>
+#   OlinkAnalyze::olink_pca_plot(color_g = "Project")
 
 ## ----echo=FALSE, fig.cap=f11--------------------------------------------------
 knitr::include_graphics(normalizePath("../man/figures/bridges_post_bridging.png"), 
                         error = FALSE)
 
 ## ----eval = FALSE-------------------------------------------------------------
-#  df <- npx_br_data |>
-#      dplyr::filter(Project == "Explore_3072") |>
-#      arrow::as_arrow_table()
-#  
-#  df$metadata$FileVersion <- "NA"
-#  df$metadata$ExploreVersion <- "NA"
-#  df$metadata$ProjectName <- "NA"
-#  df$metadata$SampleMatrix <- "NA"
-#  df$metadata$DataFileType <- "Olink Analyze Export File"
-#  df$metadata$ProductType <- "Explore3072"
-#  df$metadata$Product <- "Explore3072"
-#  arrow::write_parquet(x = df, sink = "path_to_output.parquet")
+# df <- npx_br_data |>
+#     dplyr::filter(Project == "Explore_3072") |>
+#     arrow::as_arrow_table()
+# 
+# df$metadata$FileVersion <- "NA"
+# df$metadata$ExploreVersion <- "NA"
+# df$metadata$ProjectName <- "NA"
+# df$metadata$SampleMatrix <- "NA"
+# df$metadata$DataFileType <- "Olink Analyze Export File"
+# df$metadata$ProductType <- "Explore3072"
+# df$metadata$Product <- "Explore3072"
+# arrow::write_parquet(x = df, sink = "path_to_output.parquet")
 
 ## ----echo=TRUE, eval=FALSE----------------------------------------------------
-#  # Option 1: Exclude non bridgeable assays from both products
-#  npx_recommended <- npx_after_br_final |>
-#    dplyr::mutate(NPX_original = NPX) |>
-#    dplyr::filter(BridgingRecommendation != "NotBridgeable") |>
-#    dplyr::mutate(NPX = case_when(
-#      BridgingRecommendation == "MedianCentering" ~ MedianCenteredNPX,
-#      BridgingRecommendation == "QuantileSmoothing" ~ QSNormalizedNPX,
-#      .default = NPX)) |>
-#    dplyr::mutate(OlinkID_HT = OlinkID) |>
-#    dplyr::mutate(OlinkID = paste0(OlinkID, "_", OlinkID_E3072))
-#  
-#  # Option 2: Analyze non bridgeable assays separately
-#  npx_recommended <- npx_after_br_final |>
-#    dplyr::mutate(NPX_original = NPX) |>
-#    dplyr::mutate(NPX = case_when(
-#      BridgingRecommendation == "MedianCentering" ~ MedianCenteredNPX,
-#      BridgingRecommendation == "QuantileSmoothing" ~ QSNormalizedNPX,
-#      .default = NPX)) |>
-#    dplyr::mutate(OlinkID_HT = OlinkID) |>
-#    dplyr::mutate(OlinkID = ifelse(BridgingRecommendation != "NotBridgeable",
-#                                   paste0(OlinkID, "_", OlinkID_E3072),
-#                                   # Concatenated OlinkID for bridgeable Assays
-#                                   ifelse(Project == "Explore HT",
-#                                          # replace with HT project name as set in function
-#                                          OlinkID,
-#                                          OlinkID_E3072))
+# # npx_after_br_final generated by olink_normalization with format = TRUE
+# # Option 1: Exclude non-bridgeable assays from both products
+# npx_recommended <- npx_br_data |>
+#   dplyr::filter(BridgingRecommendation != "NotBridgeable") |>
+# 
+# # Option 2: Analyze non-bridgeable assays separately
+# # No further preprocessing needed
+# npx_recommended <- npx_br_data
+# 
+# 
+# 
+# # npx_after_br_final generated by olink_normalization with format = FALSE
+# # Option 1: Exclude non-bridgeable assays from both products
+# npx_recommended <- npx_br_data  |>
+#   dplyr::mutate(NPX_original = NPX) |>
+#   dplyr::filter(BridgingRecommendation != "Not Bridgeable") |>
+#   dplyr::mutate(NPX = case_when(
+#     BridgingRecommendation == "MedianCentering" ~ MedianCenteredNPX,
+#     BridgingRecommendation == "QuantileSmoothing" ~ QSNormalizedNPX,
+#     .default = NPX)) |>
+#   dplyr::mutate(OlinkID_HT = OlinkID) |>
+#   dplyr::mutate(OlinkID = paste0(OlinkID, "_", OlinkID_E3072))
+# 
+# # Option 2: Analyze non bridgeable assays separately
+# npx_recommended <- npx_br_data  |>
+#   dplyr::mutate(NPX_original = NPX) |>
+#   dplyr::mutate(NPX = case_when(
+#     BridgingRecommendation == "MedianCentering" ~ MedianCenteredNPX,
+#     BridgingRecommendation == "QuantileSmoothing" ~ QSNormalizedNPX,
+#     .default = NPX)) |>
+#   dplyr::mutate(OlinkID_HT = OlinkID) |>
+#   dplyr::mutate(OlinkID = ifelse(BridgingRecommendation != "NotBridgeable",
+#                                  paste0(OlinkID, "_", OlinkID_E3072),
+#                                  # Concatenated OlinkID for bridgeable Assays
+#                                  ifelse(Project == "Explore HT",
+#                                         # replace with HT project name as set in function
+#                                         OlinkID,
+#                                         OlinkID_E3072)))
 
