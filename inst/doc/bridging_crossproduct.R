@@ -28,12 +28,14 @@ data.frame(Platform = c("Target 96",
                                "Cardiometabolic II, Inflammation II,",
                                "Neurology II, and Oncology II"),
                         "Explore HT",
-                        "Explore 3072 to Explore HT"),
+                        "Explore 3072 to Explore HT",
+                        "Explore 3072 to Reveal"),
            BridgingSamples = c("8-16",
                                "8-16",
                                "16-24",
                                "16-32",
-                               "40-64")) |>
+                               "40-64",
+                               "32-48")) |>
   kbl(booktabs = TRUE,
       digits = 2,
       caption = "Recommended number of bridging samples for Olink platforms") |>
@@ -46,12 +48,14 @@ data.frame(Platform = c("Target 96",
 ## ----fig.cap= fcap, eval = TRUE, echo = FALSE, out.width="50%"----------------
 knitr::include_graphics(normalizePath("../man/figures/Bridging_schematic.png"),
                         error = FALSE)
-fcap <- "Schematic of Explore 3072 to Explore HT Bridging Workflow"
+fcap <- "Schematic of Between-Product Bridging Workflow"
 
 ## ----message=FALSE, eval=FALSE, echo = TRUE-----------------------------------
-# # Note: Explore 3072 NPX files can be CSV or parquet.
+# # Note: Explore 3072 and Reveal files can be CSV or parquet.
 # data_explore3072 <- read_NPX("~/NPX_Explore3072_location.parquet")
-# data_exploreht <- read_NPX("~/NPX_ExploreHT_location.parquet")
+# data_reference_product <- read_NPX("~/NPX_ExploreHT_location.parquet")
+# # Or for reveal data
+# data_reference_product <- read_NPX("~/NPX_Reveal_location.parquet")
 
 ## ----echo=TRUE, eval = FALSE--------------------------------------------------
 # data_explore3072_samples <- data_explore3072 |>
@@ -59,13 +63,13 @@ fcap <- "Schematic of Explore 3072 to Explore HT Bridging Workflow"
 #   dplyr::distinct(SampleID) |>
 #   dplyr::pull()
 # 
-# data_exploreht_samples <- data_exploreht |>
+# data_reference_product_samples <- data_reference_product |>
 #   dplyr::filter(SampleType == "SAMPLE") |>
 #   dplyr::distinct(SampleID) |>
 #   dplyr::pull()
 # 
 # overlapping_samples <- unique(intersect(data_explore3072_samples,
-#                                         data_exploreht_samples))
+#                                         data_reference_product_samples))
 # # Note that if `SampleType` is not is input data:
 # # stringr::str_detect can be used to exclude control samples based on SampleID.
 
@@ -82,7 +86,8 @@ try(
 )
 
 ## ----include=FALSE------------------------------------------------------------
-f3 <- paste0("PCA plot prior to bridging for Explore 3072 and Explore HT data.",
+f3 <- paste0("PCA plot prior to bridging for Explore 3072 data",
+              " and data from the reference product.",
              " Bridge samples are indicated by color.",
              " PCA plots can be helpful in assessing",
              " if any bridge samples were outliers in one of the platforms.")
@@ -99,17 +104,17 @@ f3 <- paste0("PCA plot prior to bridging for Explore 3072 and Explore HT data.",
 #                                paste0("Explore 3072 Bridge"),
 #                                paste0("Explore 3072 Sample")))
 # 
-# data_exploreht_before_br <- data_exploreht |>
+# data_reference_product_before_br <- data_reference_product |>
 #   dplyr::filter(SampleType == "SAMPLE") |>
 #   dplyr::mutate(Type = if_else(SampleID %in% overlapping_samples,
-#                                paste0("Explore HT Bridge"),
-#                                paste0("Explore HT Sample")))
+#                                paste0("Reference Product Bridge"),
+#                                paste0("Reference Product Sample")))
 # 
 # ### PCA plot
 # pca_E3072 <- OlinkAnalyze::olink_pca_plot(df = data_explore3072_before_br,
 #                                          color_g = "Type",
 #                                          quiet = TRUE)
-# pca_EHT <- OlinkAnalyze::olink_pca_plot(df = data_exploreht_before_br,
+# pca_EHT <- OlinkAnalyze::olink_pca_plot(df = data_reference_product_before_br,
 #                                         color_g = "Type",
 #                                         quiet = TRUE)
 
@@ -120,29 +125,29 @@ knitr::include_graphics(normalizePath("../man/figures/PCA_btw_product_before.png
 
 ## ----eval = FALSE-------------------------------------------------------------
 # # Find shared samples
-# npx_ht <- data_exploreht |>
+# npx_ht <- data_reference_product |>
 #   dplyr::mutate(Project = "data1")
 # npx_3072 <- data_explore3072 |>
 #   dplyr::mutate(Project = "data2")
 # 
 # # perform between-product bridging without formatting for downstream analysis
-# npx_br_data <- olink_normalization(df1 = npx_ht,
+# npx_br_data <- olink_normalization(df1 = npx_ref_product,
 #                                    df2 = npx_3072,
 #                                    overlapping_samples_df1 =
 #                                      overlapping_samples,
-#                                    df1_project_nr = "Explore HT",
+#                                    df1_project_nr = "Reference Product",
 #                                    df2_project_nr = "Explore 3072",
-#                                    reference_project = "Explore HT",
+#                                    reference_project = "Reference Product",
 #                                    format = FALSE)
 # 
 # # perform between-product bridging with formatting for downstream analysis
-# npx_br_data <- olink_normalization(df1 = npx_ht,
+# npx_br_data <- olink_normalization(df1 = npx_ref_product,
 #                                    df2 = npx_3072,
 #                                    overlapping_samples_df1 =
 #                                      overlapping_samples,
-#                                    df1_project_nr = "Explore HT",
+#                                    df1_project_nr = "Reference Product",
 #                                    df2_project_nr = "Explore 3072",
-#                                    reference_project = "Explore HT",
+#                                    reference_project = "Reference Product",
 #                                    format = TRUE)
 
 ## ----echo=FALSE, fig.cap=fcap, out.width="50%"--------------------------------
@@ -328,8 +333,8 @@ knitr::include_graphics(normalizePath("../man/figures/bridges_post_bridging.png"
 #   dplyr::mutate(OlinkID = ifelse(BridgingRecommendation != "NotBridgeable",
 #                                  paste0(OlinkID, "_", OlinkID_E3072),
 #                                  # Concatenated OlinkID for bridgeable Assays
-#                                  ifelse(Project == "Explore HT",
-#                                         # replace with HT project name as set in function
+#                                  ifelse(Project == "Reference Product",
+#                                         # replace with reference project name as set in function
 #                                         OlinkID,
 #                                         OlinkID_E3072)))
 
