@@ -1,7 +1,7 @@
 Type: Package
 Package: OlinkAnalyze
 Title: Facilitate Analysis of Proteomic Data from Olink
-Version: 4.2.0
+Version: 4.3.0
 Authors@R: c(
     person("Kathleen", "Nevola", , "biostattools@olink.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-5183-6444", "kathy-nevola")),
@@ -68,9 +68,9 @@ Imports: broom, car, cli (>= 3.6.2), dplyr (>= 1.1.1), data.table,
         grDevices, grid, magrittr, methods, readxl, rlang, rstatix,
         stats, stringr, tibble, tidyr, tidyselect, tools, utils
 Suggests: arrow, clusterProfiler, extrafont, FSA, ggplotify,
-        kableExtra, knitr, lme4, lmerTest, markdown, msigdbr, openssl,
-        ordinal, pheatmap, rmarkdown, scales, systemfonts, testthat (>=
-        3.0.0), umap, vdiffr, withr, zip
+        kableExtra, knitr, lme4, lmerTest, markdown, msigdbr (>=
+        9.0.0), openssl, ordinal, pheatmap, rmarkdown, scales,
+        systemfonts, testthat (>= 3.0.0), umap, vdiffr, withr, zip
 VignetteBuilder: kableExtra, knitr
 Config/testthat/edition: 3
 Encoding: UTF-8
@@ -79,37 +79,43 @@ RoxygenNote: 7.3.2
 URL: https://olink.com/
         https://github.com/Olink-Proteomics/OlinkRPackage
 NeedsCompilation: no
-Packaged: 2025-02-24 21:14:45 UTC; kathy.nevola
-Author: Kathleen Nevola [aut, cre] (<https://orcid.org/0000-0002-5183-6444>,
-    kathy-nevola),
-  Marianne Sandin [aut] (<https://orcid.org/0000-0001-6186-963X>,
+Packaged: 2025-06-24 15:18:33 UTC; kathy.nevola
+Author: Kathleen Nevola [aut, cre] (ORCID:
+    <https://orcid.org/0000-0002-5183-6444>, kathy-nevola),
+  Marianne Sandin [aut] (ORCID: <https://orcid.org/0000-0001-6186-963X>,
     marisand),
-  Jamey Guess [aut] (<https://orcid.org/0000-0002-4017-0923>, jrguess),
-  Simon Forsberg [aut] (<https://orcid.org/0000-0002-7451-9222>, simfor),
+  Jamey Guess [aut] (ORCID: <https://orcid.org/0000-0002-4017-0923>,
+    jrguess),
+  Simon Forsberg [aut] (ORCID: <https://orcid.org/0000-0002-7451-9222>,
+    simfor),
   Christoffer Cambronero [aut] (Orbmac),
-  Pascal Pucholt [aut] (<https://orcid.org/0000-0003-3342-1373>,
+  Pascal Pucholt [aut] (ORCID: <https://orcid.org/0000-0003-3342-1373>,
     AskPascal),
-  Boxi Zhang [aut] (<https://orcid.org/0000-0001-7758-6204>, boxizhang),
+  Boxi Zhang [aut] (ORCID: <https://orcid.org/0000-0001-7758-6204>,
+    boxizhang),
   Masoumeh Sheikhi [aut] (MasoumehSheikhi),
-  Klev Diamanti [aut] (<https://orcid.org/0000-0002-4922-8415>,
+  Klev Diamanti [aut] (ORCID: <https://orcid.org/0000-0002-4922-8415>,
     klevdiamanti),
   Amrita Kar [aut] (amrita-kar),
   Lei Conze [aut] (leiliuC),
   Kristyn Chin [aut] (kristynchin-olink),
-  Danai Topouza [aut] (dtopouza, <https://orcid.org/0000-0002-6897-9281>),
-  Stephen Pollo [aut] (spollo-olprot,
+  Danai Topouza [aut] (dtopouza, ORCID:
+    <https://orcid.org/0000-0002-6897-9281>),
+  Stephen Pollo [aut] (spollo-olprot, ORCID:
     <https://orcid.org/0000-0001-9252-4976>),
-  Kang Dong [aut] (KangD-dev, <https://orcid.org/0000-0002-4567-5007>),
-  Kristian Hodén [ctb] (<https://orcid.org/0000-0003-0354-0662>,
+  Kang Dong [aut] (KangD-dev, ORCID:
+    <https://orcid.org/0000-0002-4567-5007>),
+  Kristian Hodén [ctb] (ORCID: <https://orcid.org/0000-0003-0354-0662>,
     kristianHoden),
-  Per Eriksson [ctb] (<https://orcid.org/0000-0001-7633-403X>, b_watcher),
-  Nicola Moloney [ctb] (<https://orcid.org/0000-0003-4967-3284>),
-  Britta Lötstedt [ctb] (<https://orcid.org/0000-0003-3545-5489>),
-  Emmett Sprecher [ctb] (<https://orcid.org/0000-0002-7710-695X>),
+  Per Eriksson [ctb] (ORCID: <https://orcid.org/0000-0001-7633-403X>,
+    b_watcher),
+  Nicola Moloney [ctb] (ORCID: <https://orcid.org/0000-0003-4967-3284>),
+  Britta Lötstedt [ctb] (ORCID: <https://orcid.org/0000-0003-3545-5489>),
+  Emmett Sprecher [ctb] (ORCID: <https://orcid.org/0000-0002-7710-695X>),
   Jessica Barbagallo [ctb] (jbarbagallo),
   Olof Mansson [ctr] (olofmansson),
   Ola Caster [ctb] (OlaCaster),
   Olink [cph, fnd]
 Maintainer: Kathleen Nevola <biostattools@olink.com>
 Repository: CRAN
-Date/Publication: 2025-02-24 21:40:08 UTC
+Date/Publication: 2025-06-24 16:10:02 UTC
