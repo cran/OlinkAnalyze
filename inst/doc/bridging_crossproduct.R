@@ -30,14 +30,18 @@ data.frame(Platform = c("Target 96",
                         "Explore HT",
                         "Reveal",
                         "Explore 3072 to Explore HT",
-                        "Explore 3072 to Reveal"),
+                        "Explore 3072 to Reveal",
+                        "Explore HT to Reveal",
+                        "Reveal to Explore HT"),
            BridgingSamples = c("8-16",
                                "8-16",
                                "16-24",
                                "16-32",
                                "16-24",
                                "40-64",
-                               "32-48")) |>
+                               "32-48",
+                               "24-40",
+                               "24-40")) |>
   kbl(booktabs = TRUE,
       digits = 2,
       caption = "Recommended number of bridging samples for Olink platforms") |>
@@ -55,9 +59,9 @@ fcap <- "Schematic of Between-Product Bridging Workflow"
 ## ----message=FALSE, eval=FALSE, echo = TRUE-----------------------------------
 # # Note: Explore 3072 and Reveal files can be CSV or parquet.
 # data_explore3072 <- read_NPX("~/NPX_Explore3072_location.parquet")
-# data_reference_product <- read_NPX("~/NPX_ExploreHT_location.parquet")
+# data_exploreHT <- read_NPX("~/NPX_ExploreHT_location.parquet")
 # # Or for reveal data
-# data_reference_product <- read_NPX("~/NPX_Reveal_location.parquet")
+# data_reveal <- read_NPX("~/NPX_Reveal_location.parquet")
 
 ## ----echo=TRUE, eval = FALSE--------------------------------------------------
 # data_explore3072_samples <- data_explore3072 |>
@@ -65,13 +69,13 @@ fcap <- "Schematic of Between-Product Bridging Workflow"
 #   dplyr::distinct(SampleID) |>
 #   dplyr::pull()
 # 
-# data_reference_product_samples <- data_reference_product |>
+# data_exploreHT_product_samples <- data_exploreHT |>
 #   dplyr::filter(SampleType == "SAMPLE") |>
 #   dplyr::distinct(SampleID) |>
 #   dplyr::pull()
 # 
 # overlapping_samples <- unique(intersect(data_explore3072_samples,
-#                                         data_reference_product_samples))
+#                                         data_exploreHT_product_samples))
 # # Note that if `SampleType` is not is input data:
 # # stringr::str_detect can be used to exclude control samples based on SampleID.
 
@@ -106,7 +110,7 @@ f3 <- paste0("PCA plot prior to bridging for Explore 3072 data",
 #                                paste0("Explore 3072 Bridge"),
 #                                paste0("Explore 3072 Sample")))
 # 
-# data_reference_product_before_br <- data_reference_product |>
+# data_exploreHT_before_br <- data_exploreHT |>
 #   dplyr::filter(SampleType == "SAMPLE") |>
 #   dplyr::mutate(Type = if_else(SampleID %in% overlapping_samples,
 #                                paste0("Reference Product Bridge"),
@@ -127,13 +131,13 @@ knitr::include_graphics(normalizePath("../man/figures/PCA_btw_product_before.png
 
 ## ----eval = FALSE-------------------------------------------------------------
 # # Find shared samples
-# npx_ht <- data_reference_product |>
+# npx_ht <- data_exploreHT |>
 #   dplyr::mutate(Project = "data1")
 # npx_3072 <- data_explore3072 |>
 #   dplyr::mutate(Project = "data2")
 # 
 # # perform between-product bridging without formatting for downstream analysis
-# npx_br_data <- olink_normalization(df1 = npx_ref_product,
+# npx_br_data <- olink_normalization(df1 = npx_ht,
 #                                    df2 = npx_3072,
 #                                    overlapping_samples_df1 =
 #                                      overlapping_samples,
@@ -143,7 +147,7 @@ knitr::include_graphics(normalizePath("../man/figures/PCA_btw_product_before.png
 #                                    format = FALSE)
 # 
 # # perform between-product bridging with formatting for downstream analysis
-# npx_br_data <- olink_normalization(df1 = npx_ref_product,
+# npx_br_data <- olink_normalization(df1 = npx_ht,
 #                                    df2 = npx_3072,
 #                                    overlapping_samples_df1 =
 #                                      overlapping_samples,
