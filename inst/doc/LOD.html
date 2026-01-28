@@ -563,7 +563,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Calculating LOD from Olink® Explore
 data</h1>
-<h4 class="date">Compiled: December 02, 2025</h4>
+<h4 class="date">Compiled: January 28, 2026</h4>
 
 
 <div id="TOC">
@@ -582,8 +582,8 @@ LOD</a></li>
 and Fixed LOD</a></li>
 <li><a href="#adjusting-lod-for-intensity-normalized-data" id="toc-adjusting-lod-for-intensity-normalized-data">Adjusting LOD for
 Intensity Normalized Data</a></li>
-<li><a href="#integrating-lod-in-cross-product-bridging" id="toc-integrating-lod-in-cross-product-bridging">Integrating LOD in
-Cross-Product Bridging</a></li>
+<li><a href="#handling-lod-in-bridge-normalized-data" id="toc-handling-lod-in-bridge-normalized-data">Handling LOD in
+Bridge-Normalized Data</a></li>
 <li><a href="#export-olink-explore-data-with-lod" id="toc-export-olink-explore-data-with-lod">Export Olink Explore Data
 with LOD</a></li>
 <li><a href="#contact-us" id="toc-contact-us">Contact Us</a></li>
@@ -1566,13 +1566,25 @@ from the PC normalized negative control LOD.</p>
 <p>The intensity normalization LOD adjustment is applied to both the
 negative control and fixed LOD methods.</p>
 </div>
-<div id="integrating-lod-in-cross-product-bridging" class="section level2">
-<h2>Integrating LOD in Cross-Product Bridging</h2>
-<p>The reference project is not altered during bridging normalization.
-As a result, both the NC LOD calculated from negative controls in the
-reference project and the fixed LOD attached to the reference project
-stay the same. After bridging normalization, we recommend applying the
-LOD values from the reference project to the non-reference project.</p>
+<div id="handling-lod-in-bridge-normalized-data" class="section level2">
+<h2>Handling LOD in Bridge-Normalized Data</h2>
+<p>When using the <code>olink_normalization_bridge()</code> function to
+bridge two datasets, the reference project remains unchanged throughout
+the bridging procedure, including the NC LOD (calculated from negative
+controls in the reference project) and the fixed LOD. In contrast, the
+LOD values (both NC LOD and fixed LOD) for the non-reference project are
+adjusted using the same adjustment factor that is applied to all other
+samples for the corresponding assay. This adjustment factor is the
+median of the paired NPX differences per assay between the bridging
+samples.</p>
+<p>Consequently, for <strong>within-product bridging</strong>, LOD
+values from both the reference and non-reference projects can be used
+for downstream analysis. In contrast, for <strong>between-product
+bridging</strong>, differences in assay bridgeability between products
+and the use of distinct normalization methods (median centering versus
+quantile smoothing) should be taken into account. Therefore, we
+recommend applying the LOD values from the reference project to the
+non-reference project in between-product bridging.</p>
 </div>
 <div id="export-olink-explore-data-with-lod" class="section level2">
 <h2>Export Olink Explore Data with LOD</h2>
