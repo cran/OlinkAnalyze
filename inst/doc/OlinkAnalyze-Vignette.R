@@ -1,19 +1,40 @@
 ## ----setup, include = FALSE---------------------------------------------------
 knitr::opts_chunk$set(
-  fig.width = 6,
-  fig.height = 3,
+  fig.width = 6L,
+  fig.height = 3L,
   fig.align = "center",
   collapse = TRUE,
   comment = "#>"
 )
 
-options(tibble.print_min = 4L, tibble.print_max = 4L)
+options(
+  tibble.print_min = 4L,
+  tibble.print_max = 4L
+)
 
-## ----eval=FALSE---------------------------------------------------------------
+## ----eval = FALSE-------------------------------------------------------------
 # install.packages("OlinkAnalyze")
 
-## ----message=FALSE, eval=FALSE------------------------------------------------
-# data <- OlinkAnalyze::read_NPX("~/NPX_file_location.xlsx")
+## ----oa_v5_workflow, echo = FALSE, eval = TRUE, message = FALSE, out.width = "690px", fig.cap = fcap----
+knitr::include_graphics(
+  path = normalizePath(
+    path = "../man/figures/OA_v5.0_flowchart.png"
+  ),
+  error = FALSE
+)
+fcap <- paste("Schematic overview illustrating how the newly introduced",
+              "functions `check_npx()` and `clean_npx()` in Olink Analyze v5.0",
+              "can be used together in a typical Olink data analysis workflow.")
+
+## ----message = FALSE, eval = FALSE--------------------------------------------
+# data <- OlinkAnalyze::read_npx(
+#   filename = "~/NPX_file_location.xlsx"
+# )
+# 
+# # OR
+# data <- OlinkAnalyze::read_NPX(
+#   filename = "~/NPX_file_location.xlsx"
+# )
 
 ## ----message=FALSE, eval=FALSE------------------------------------------------
 # # Read in multiple NPX files in .csv format
@@ -23,9 +44,11 @@ options(tibble.print_min = 4L, tibble.print_max = 4L)
 #   full.names = TRUE
 # ) |>
 #   lapply(FUN = function(x) {
-#     df_tmp <- OlinkAnalyze::read_NPX(x) |>
+#     df_tmp <- OlinkAnalyze::read_npx(x) |>
 #       # Optionally add additional columns to add file identifiers
-#       dplyr::mutate(File = x)
+#       dplyr::mutate(
+#         File = .env[["x"]]
+#       )
 #     return(df_tmp)
 #   })  |>
 #   # optional to return a single data frame of all files instead of a list of dfs
@@ -38,7 +61,7 @@ options(tibble.print_min = 4L, tibble.print_max = 4L)
 #   full.names = TRUE
 # ) |>
 #   lapply(
-#     OlinkAnalyze::read_NPX
+#     OlinkAnalyze::read_npx
 #   )  |>
 #   dplyr::bind_rows()
 # 
@@ -49,71 +72,73 @@ options(tibble.print_min = 4L, tibble.print_max = 4L)
 #   full.names = TRUE
 # ) |>
 #   lapply(
-#     OlinkAnalyze::read_NPX
+#     OlinkAnalyze::read_npx
 #   )  |>
 #   dplyr::bind_rows()
 
-## ----message=FALSE, eval=FALSE------------------------------------------------
+## ----message = FALSE, eval = FALSE--------------------------------------------
 # # Check NPX data quality and format
-# check_npx_result <- OlinkAnalyze::check_npx(
-#   df = OlinkAnalyze::npx_data1
+# check_log <- OlinkAnalyze::check_npx(
+#   df = data
 # )
 
-## ----message=FALSE, eval=FALSE------------------------------------------------
+## ----message = FALSE, eval = FALSE--------------------------------------------
 # # Clean the NPX data using the check_npx output
-# npx_clean <- OlinkAnalyze::clean_npx(
-#   df = OlinkAnalyze::npx_data1,
-#   check_log = check_npx_result
+# data_clean <- OlinkAnalyze::clean_npx(
+#   df = data,
+#   check_log = check_log
 # )
 
-## ----message=FALSE, eval=FALSE------------------------------------------------
+## ----message = FALSE, eval = FALSE--------------------------------------------
 # # Check NPX data quality and format
-# check_npx_clean <- OlinkAnalyze::check_npx(
-#   df = npx_clean
+# check_log_clean <- OlinkAnalyze::check_npx(
+#   df = data_clean
 # )
 
-## ----message=FALSE, eval=FALSE------------------------------------------------
-# # Run check_npx and clean_npx before analysis
+## ----message = FALSE, eval = FALSE--------------------------------------------
+# # Run check_npx() and clean_npx() before analysis
 # OlinkAnalyze::olink_ttest(
-#   df = npx_clean,
+#   df = data_clean,
 #   variable = "Treatment",
-#   check_log = check_npx_clean
+#   check_log = check_log_clean
 # )
 
-## ----message=FALSE, eval=FALSE------------------------------------------------
+## ----message = FALSE, eval = FALSE--------------------------------------------
 # OlinkAnalyze::olink_wilcox(
-#   df = npx_clean,
+#   df = data_clean,
 #   variable = "Treatment",
-#   check_log = check_npx_clean
+#   check_log = check_log_clean
 # )
 
-## ----message=FALSE, eval=FALSE------------------------------------------------
+## ----message = FALSE, eval = FALSE--------------------------------------------
 # # One-way ANOVA, no covariates
 # anova_results_oneway <- OlinkAnalyze::olink_anova(
-#   df = npx_clean,
+#   df = data_clean,
 #   variable = "Site",
-#   check_log = check_npx_clean
+#   check_log = check_log_clean
 # )
+# 
 # # Two-way ANOVA, no covariates
 # anova_results_twoway <- OlinkAnalyze::olink_anova(
-#   df = npx_clean,
+#   df = data_clean,
 #   variable = c("Site", "Time"),
-#   check_log = check_npx_clean
+#   check_log = check_log_clean
 # )
+# 
 # # One-way ANOVA, Treatment as covariates
 # anova_results_oneway <- OlinkAnalyze::olink_anova(
-#   df = npx_clean,
+#   df = data_clean,
 #   variable = "Site",
 #   covariates = "Treatment",
-#   check_log = check_npx_clean
+#   check_log = check_log_clean
 # )
 
-## ----message=FALSE, eval=FALSE------------------------------------------------
+## ----message = FALSE, eval = FALSE--------------------------------------------
 # # calculate the p-value for the ANOVA
 # anova_results_oneway <- OlinkAnalyze::olink_anova(
-#   df = npx_clean,
+#   df = data_clean,
 #   variable = "Site",
-#   check_log = check_npx_clean
+#   check_log = check_log_clean
 # )
 # 
 # # extracting the significant proteins
@@ -126,37 +151,37 @@ options(tibble.print_min = 4L, tibble.print_max = 4L)
 #   )
 # 
 # anova_posthoc_oneway_results <- OlinkAnalyze::olink_anova_posthoc(
-#   df = npx_clean,
+#   df = data_clean,
 #   olinkid_list = anova_results_oneway_sign,
 #   variable = "Site",
 #   effect = "Site",
-#   check_log = check_npx_clean
+#   check_log = check_log_clean
 # )
 
-## ----message=FALSE, eval=FALSE------------------------------------------------
+## ----message = FALSE, eval = FALSE--------------------------------------------
 # # Linear mixed model with one variable.
 # lmer_results_oneway <- OlinkAnalyze::olink_lmer(
-#   df = npx_clean,
+#   df = data_clean,
 #   variable = "Site",
 #   random = "Subject",
-#   check_log = check_npx_clean
+#   check_log = check_log_clean
 # )
 # 
 # # Linear mixed model with two variables.
 # lmer_results_twoway <- OlinkAnalyze::olink_lmer(
-#   df = npx_clean,
+#   df = data_clean,
 #   variable = c("Site", "Treatment"),
 #   random = "Subject",
-#   check_log = check_npx_clean
+#   check_log = check_log_clean
 # )
 
-## ----message=FALSE, eval=FALSE------------------------------------------------
+## ----message = FALSE, eval = FALSE--------------------------------------------
 # # Linear mixed model with two variables.
 # lmer_results_twoway <- OlinkAnalyze::olink_lmer(
-#   df = npx_clean,
+#   df = data_clean,
 #   variable = c("Site", "Treatment"),
 #   random = "Subject",
-#   check_log = check_npx_clean
+#   check_log = check_log_clean
 # )
 # 
 # # extracting the significant proteins
@@ -171,125 +196,141 @@ options(tibble.print_min = 4L, tibble.print_max = 4L)
 # 
 # # performing post-hoc analysis
 # lmer_posthoc_twoway_results <- OlinkAnalyze::olink_lmer_posthoc(
-#   df = npx_clean,
+#   df = data_clean,
 #   olinkid_list = lmer_results_twoway_sign,
 #   variable = c("Site", "Treatment"),
 #   random = "Subject",
 #   effect = "Treatment",
-#   check_log = check_npx_clean
+#   check_log = check_log_clean
 # )
 
-## ----message=FALSE, eval=FALSE------------------------------------------------
+## ----message = FALSE, eval = FALSE--------------------------------------------
 # ttest_results <- OlinkAnalyze::olink_ttest(
-#   df = npx_df_clean,
+#   df = data_clean,
 #   variable = "Treatment",
 #   alternative = "two.sided",
-#   check_log = check_npx_clean
+#   check_log = check_log_clean
 # )
 # 
+# # GSEA enrichment analysis
 # gsea_results <- OlinkAnalyze::olink_pathway_enrichment(
-#   df = npx_df_clean,
-#   test_results = ttest_results
+#   df = data_clean,
+#   test_results = ttest_results,
+#   check_log = check_log_clean
 # )
 # 
+# # ORA enrichment analysis
 # ora_results <- OlinkAnalyze::olink_pathway_enrichment(
-#   df = npx_df_clean,
+#   df = data_clean,
 #   test_results = ttest_results,
-#   method = "ORA"
+#   method = "ORA",
+#   check_log = check_log_clean
 # )
 
-## ----message=FALSE, eval=FALSE------------------------------------------------
+## ----message = FALSE, eval = FALSE--------------------------------------------
 # OlinkAnalyze::olink_umap_plot(
-#   df = npx_clean,
+#   df = data_clean,
 #   color_g = "QC_Warning",
 #   byPanel = TRUE,
-#   check_log = check_npx_clean
+#   check_log = check_log_clean
 # )
 
-## ----message=FALSE, echo = FALSE----------------------------------------------
+## ----message = FALSE, echo = FALSE--------------------------------------------
 knitr::include_graphics(
-  path = normalizePath("../man/figures/olink_umap_plot.png"),
+  path = normalizePath(
+    path = "../man/figures/olink_umap_plot.png"
+  ),
   error = FALSE
 )
 
-## ----message=FALSE, eval=FALSE------------------------------------------------
-# plot <- npx_clean |>
+## ----message = FALSE, eval = FALSE--------------------------------------------
+# plot <- data_clean |>
+#   # removing missing values that exist for Site
 #   dplyr::filter(
 #     !is.na(.data[["Site"]])
-#   ) |> # removing missing values which exist for Site
+#   ) |>
 #   OlinkAnalyze::olink_boxplot(
 #     variable = "Site",
 #     olinkid_list = c("OID00488", "OID01276"),
 #     number_of_proteins_per_plot = 2L,
-#     check_log = check_npx_clean
+#     check_log = check_log_clean
 #   )
 # 
 # plot[[1L]]
 
-## ----message=FALSE, echo = FALSE----------------------------------------------
+## ----message = FALSE, echo = FALSE--------------------------------------------
 knitr::include_graphics(
-  path = normalizePath("../man/figures/olink_boxplot.png"),
+  path = normalizePath(
+    path = "../man/figures/olink_boxplot.png"
+  ),
   error = FALSE
 )
 
-## ----message=FALSE, eval=FALSE------------------------------------------------
-# anova_posthoc_results <- npx_clean |>
-#   OlinkAnalyze::olink_anova_posthoc(
-#     olinkid_list = c("OID00488", "OID01276"),
-#     variable = "Site",
-#     effect = "Site",
-#     check_log = check_npx_clean
-#   )
+## ----message = FALSE, eval = FALSE--------------------------------------------
+# anova_posthoc_results <- OlinkAnalyze::olink_anova_posthoc(
+#   df = data_clean,
+#   olinkid_list = c("OID00488", "OID01276"),
+#   variable = "Site",
+#   effect = "Site",
+#   check_log = check_log_clean
+# )
 # 
-# plot2 <- npx_clean |>
-#   stats::na.omit() |> # removing missing values which exists for Site
+# plot2 <- data_clean |>
+#   tidyr::drop_na() |> # removing missing values that exist for Site
 #   OlinkAnalyze::olink_boxplot(
 #     variable = "Site",
 #     olinkid_list = c("OID00488", "OID01276"),
 #     number_of_proteins_per_plot = 2L,
 #     posthoc_results = anova_posthoc_results,
-#     check_log = check_npx_clean
+#     check_log = check_log_clean
 #   )
 # 
 # plot2[[1L]]
 
 ## ----message=FALSE, echo=FALSE------------------------------------------------
 knitr::include_graphics(
-  path = normalizePath("../man/figures/olink_boxplot_anova_posthoc.png"),
+  path = normalizePath(
+    path = "../man/figures/olink_boxplot_anova_posthoc.png"
+  ),
   error = FALSE
 )
 
-## ----message=FALSE, eval=FALSE------------------------------------------------
+## ----message = FALSE, eval = FALSE--------------------------------------------
 # plot <- OlinkAnalyze::olink_lmer_plot(
-#   df = npx_clean,
+#   df = data_clean,
 #   olinkid_list = c("OID01216", "OID01217"),
 #   variable = c("Site", "Treatment"),
 #   x_axis_variable = "Site",
 #   col_variable = "Treatment",
 #   random = "Subject",
-#   check_log = check_npx_clean
+#   check_log = check_log_clean
 # )
+# 
 # plot[[1L]]
 
-## ----message=FALSE, fig.width=8, echo=FALSE-----------------------------------
+## ----message = FALSE, fig.width = 8, echo = FALSE-----------------------------
 knitr::include_graphics(
-  path = normalizePath("../man/figures/olink_lmer_plot.png"),
+  path = normalizePath(
+    path = "../man/figures/olink_lmer_plot.png"
+  ),
   error = FALSE
 )
 
-## ----message=FALSE, eval=FALSE------------------------------------------------
+## ----message = FALSE, eval = FALSE--------------------------------------------
 # OlinkAnalyze::olink_pathway_heatmap(
 #   enrich_results = gsea_results,
 #   test_results = ttest_results
 # )
 
-## ----message=FALSE, echo=FALSE------------------------------------------------
+## ----message = FALSE, echo = FALSE--------------------------------------------
 knitr::include_graphics(
-  path = normalizePath("../man/figures/olink_pathway_heatmap_gsea.png"),
+  path = normalizePath(
+    path = "../man/figures/olink_pathway_heatmap_gsea.png"
+  ),
   error = FALSE
 )
 
-## ----message=FALSE, fig.height=4, fig.width=8, eval=FALSE---------------------
+## ----message = FALSE, fig.height = 4, fig.width = 8, eval = FALSE-------------
 # OlinkAnalyze::olink_pathway_heatmap(
 #   enrich_results = ora_results,
 #   test_results = ttest_results,
@@ -297,28 +338,30 @@ knitr::include_graphics(
 #   keyword = "immune"
 # )
 
-## ----message=FALSE, echo=FALSE------------------------------------------------
+## ----message = FALSE, echo = FALSE--------------------------------------------
 knitr::include_graphics(
-  path = normalizePath("../man/figures/olink_pathway_heatmap_ora.png"),
+  path = normalizePath(
+    path = "../man/figures/olink_pathway_heatmap_ora.png"
+  ),
   error = FALSE
 )
 
-## ----message=FALSE, eval=FALSE------------------------------------------------
-# first10 <- npx_clean |>
+## ----message = FALSE, eval = FALSE--------------------------------------------
+# first10 <- data_clean |>
 #   dplyr::pull(
 #     .data[["OlinkID"]]
 #   ) |>
 #   unique() |>
 #   utils::head(n = 10L)
 # 
-# first15samples <- npx_clean |>
+# first15samples <- data_clean |>
 #   dplyr::pull(
 #     .data[["SampleID"]]
 #   ) |>
 #   unique() |>
 #   utils::head(n = 15L)
 # 
-# npx_data_small <- npx_clean |>
+# data_clean_small <- data_clean |>
 #   dplyr::filter(
 #     .data[["OlinkID"]] %in% .env[["first10"]]
 #   ) |>
@@ -327,23 +370,25 @@ knitr::include_graphics(
 #   )
 # 
 # OlinkAnalyze::olink_heatmap_plot(
-#   df = npx_data_small,
+#   df = data_clean_small,
 #   variable_row_list = "Treatment",
-#   check_log = check_npx_clean
+#   check_log = check_log_clean
 # )
 
-## ----message=FALSE, fig.height=4, echo=FALSE----------------------------------
+## ----message = FALSE, fig.height = 4, echo = FALSE----------------------------
 knitr::include_graphics(
-  path = normalizePath("../man/figures/olink_heatmap_plot.png"),
+  path = normalizePath(
+    path = "../man/figures/olink_heatmap_plot.png"
+  ),
   error = FALSE
 )
 
-## ----message=FALSE, eval=FALSE------------------------------------------------
+## ----message = FALSE, eval = FALSE--------------------------------------------
 # # perform t-test
 # ttest_results <- OlinkAnalyze::olink_ttest(
-#   df = npx_clean,
+#   df = data_clean,
 #   variable = "Treatment",
-#   check_log = check_npx_clean
+#   check_log = check_log_clean
 # )
 # 
 # # select names of proteins to show
@@ -362,13 +407,15 @@ knitr::include_graphics(
 #   olinkid_list = top_10_name
 # )
 
-## ----message=FALSE, echo=FALSE------------------------------------------------
+## ----message = FALSE, echo = FALSE--------------------------------------------
 knitr::include_graphics(
-  path = normalizePath("../man/figures/olink_volcano_plot.png"),
+  path = normalizePath(
+    path = "../man/figures/olink_volcano_plot.png"
+  ),
   error = FALSE
 )
 
-## ----message=FALSE, eval=FALSE------------------------------------------------
+## ----message = FALSE, eval = FALSE--------------------------------------------
 # OlinkAnalyze::npx_data1 |>
 #   dplyr::filter(
 #     !is.na(.data[["Treatment"]])
@@ -386,13 +433,15 @@ knitr::include_graphics(
 #   ggplot2::geom_boxplot() +
 #   OlinkAnalyze::set_plot_theme()
 
-## ----message=FALSE, echo=FALSE------------------------------------------------
+## ----message = FALSE, echo = FALSE--------------------------------------------
 knitr::include_graphics(
-  path = normalizePath("../man/figures/set_plot_theme_boxplot.png"),
+  path = normalizePath(
+    path = "../man/figures/set_plot_theme_boxplot.png"
+  ),
   error = FALSE
 )
 
-## ----message=FALSE, eval=FALSE------------------------------------------------
+## ----message = FALSE, eval = FALSE--------------------------------------------
 # OlinkAnalyze::npx_data1 |>
 #   dplyr::filter(
 #     !is.na(.data[["Treatment"]])
@@ -413,11 +462,13 @@ knitr::include_graphics(
 
 ## ----message=FALSE, echo=FALSE------------------------------------------------
 knitr::include_graphics(
-  path = normalizePath("../man/figures/olink_fill_discrete_boxplot.png"),
+  path = normalizePath(
+    path = "../man/figures/olink_fill_discrete_boxplot.png"
+  ),
   error = FALSE
 )
 
-## ----message=FALSE, eval=FALSE------------------------------------------------
+## ----message = FALSE, eval = FALSE--------------------------------------------
 # npx_ht <- data_exploreht |>
 #   dplyr::filter(
 #     .data[["SampleType"]] == "SAMPLE"
@@ -474,9 +525,11 @@ knitr::include_graphics(
 # 
 # npx_br_data_bridgeable_plt[[1L]]
 
-## ----message=FALSE, echo=FALSE, out.width="600px"-----------------------------
+## ----message = FALSE, echo = FALSE, out.width = "600px"-----------------------
 knitr::include_graphics(
-  path = normalizePath("../man/figures/bridgeable_plt_MedianCenter.png"),
+  path = normalizePath(
+    path = "../man/figures/bridgeable_plt_MedianCenter.png"
+  ),
   error = FALSE
 )
 
